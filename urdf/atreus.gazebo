@@ -1,0 +1,360 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="atreus">
+
+<gazebo>
+  <static>false</static>
+</gazebo>
+
+
+
+<!-- ............................ INTEL REALSENSE ................................ -->
+
+<xacro:if value="$(arg front_camera_enabled)">
+
+	<xacro:if value="$(eval front_camera_type=='depth')">
+
+		<!-- Intel Realsense Plugin-->
+
+		<gazebo>
+			<plugin name="d435" filename="librealsense_gazebo_plugin.so"/>
+		</gazebo>
+
+		<!-- Load parameters to model's main link-->
+		<gazebo reference="d435_camera">
+			<self_collide>0</self_collide>
+			<enable_wind>0</enable_wind>
+			<kinematic>0</kinematic>
+			<turnGravityOff>false</turnGravityOff>
+
+			<mu2>1</mu2>
+			<fdir1>0 0 0</fdir1>
+			<kp>1e+13</kp>
+			<kd>1</kd>
+
+
+			<sensor name="color" type="camera">
+				<pose frame="">0 -0.046 0.004 0 0 0</pose>
+				<camera name="d435_camera">
+				<horizontal_fov>${radians(front_camera_horizontal_fov)}</horizontal_fov>
+				<image>
+					<width>640</width>
+					<height>480</height>
+					<format>RGB_INT8</format>
+				</image>
+				<clip>
+					<near>0.1</near>
+					<far>100</far>
+				</clip>
+				<noise>
+					<type>gaussian</type>
+					<mean>0.0</mean>
+					<stddev>0.007</stddev>
+				</noise>
+				</camera>
+				<always_on>1</always_on>
+				<update_rate>60</update_rate>
+				<visualize>true</visualize>
+			</sensor>
+
+			<sensor name="ired1" type="camera">
+				<pose frame="">0 -0.06 0.004 0 0 0</pose>
+				<camera name="d435_camera">
+				<horizontal_fov>${radians(front_camera_horizontal_fov)}</horizontal_fov>
+				<image>
+					<width>640</width>
+					<height>480</height>
+					<format>L_INT8</format>
+				</image>
+				<clip>
+					<near>0.1</near>
+					<far>100</far>
+				</clip>
+				<noise>
+					<type>gaussian</type>
+					<mean>0.0</mean>
+					<stddev>0.05</stddev>
+				</noise>
+				</camera>
+				<always_on>1</always_on>
+				<update_rate>60</update_rate>
+				<visualize>true</visualize>
+			</sensor>
+
+			<sensor name="ired2" type="camera">
+				<pose frame="">0 0.01 0.004 0 0 0</pose>
+				<camera name="d435_camera">
+				<horizontal_fov>${radians(front_camera_horizontal_fov)}</horizontal_fov>
+				<image>
+					<width>640</width>
+					<height>480</height>
+					<format>L_INT8</format>
+				</image>
+				<clip>
+					<near>0.1</near>
+					<far>100</far>
+				</clip>
+				<noise>
+					<type>gaussian</type>
+					<mean>0.0</mean>
+					<stddev>0.05</stddev>
+				</noise>
+				</camera>
+				<always_on>1</always_on>
+				<update_rate>60</update_rate>
+				<visualize>true</visualize>
+			</sensor>
+
+			<sensor name="depth" type="depth">
+				<pose frame="">0 -0.03 0.004 0 0 0</pose>
+				<camera name="d435_camera">
+				<horizontal_fov>${radians(front_camera_horizontal_fov)}</horizontal_fov>
+				<image>
+					<width>640</width>
+					<height>480</height>
+				</image>
+				<clip>
+					<near>0.1</near>
+					<far>100</far>
+				</clip>
+				<noise>
+					<type>gaussian</type>
+					<mean>0.0</mean>
+					<stddev>0.100</stddev>
+				</noise>
+				</camera>
+				<always_on>1</always_on>
+				<update_rate>60</update_rate>
+				<visualize>true</visualize>
+			</sensor>
+
+		</gazebo>
+	</xacro:if>
+
+
+	<xacro:if value="$(eval front_camera_type=='stereo')">
+
+		<!-- SENSOR PLUGIN -->
+
+		<gazebo reference="left_stereo_camera">
+
+			<sensor type="multicamera" name="stereocamera">
+				<always_on>true</always_on>
+				<update_rate>10</update_rate>
+				<camera name="left">
+					<pose>0 0 0 0 0 0</pose>
+					<horizontal_fov>${radians(front_camera_horizontal_fov)}</horizontal_fov>
+					<image>
+						<width>640</width>
+						<height>480</height>
+						<format>RGB_INT8</format>
+					</image>
+					<clip>
+						<near>0.1</near>
+						<far>100</far>
+					</clip>
+				</camera>
+				<camera name="right">
+					<pose>0 -${front_camera_baseline} 0 0 0 0</pose>
+					<horizontal_fov>${radians(front_camera_horizontal_fov)}</horizontal_fov>
+					<image>
+						<width>640</width>
+						<height>480</height>
+						<format>RGB_INT8</format>
+					</image>
+					<clip>
+						<near>0.1</near>
+						<far>100</far>
+					</clip>
+				</camera>        
+				<plugin name="stereo_camera_controller" filename="libgazebo_ros_multicamera.so">
+					<robotNamespace>/</robotNamespace>
+					<cameraName>stereocamera</cameraName>
+					<alwaysOn>true</alwaysOn>
+					<updateRate>10</updateRate>
+					<imageTopicName>image_raw</imageTopicName>
+					<cameraInfoTopicName>camera_info</cameraInfoTopicName>
+					<frameName>stereo_camera_optical</frameName>
+					<hackBaseline>${front_camera_baseline}</hackBaseline>
+					<distortion_k1>0.0</distortion_k1>
+					<distortion_k2>0.0</distortion_k2>
+					<distortion_k3>0.0</distortion_k3>
+					<distortion_t1>0.0</distortion_t1>
+					<distortion_t2>0.0</distortion_t2>
+				</plugin>
+			</sensor>
+		</gazebo>
+	</xacro:if>
+
+
+	<xacro:if value="$(eval front_camera_type=='kinect')">
+
+		<!-- SENSOR PLUGIN -->
+
+		<gazebo reference="kinect_camera">
+
+			<sensor type="depth" name="kinect_camera">
+				<always_on>true</always_on>
+				<update_rate>30.0</update_rate>
+				<camera>
+					<horizontal_fov>${radians(front_camera_horizontal_fov)}</horizontal_fov>
+				  <image>
+					<format>R8G8B8</format>
+					<width>640</width>
+					<height>480</height>
+				  </image>
+				  <clip>
+					<near>0.05</near>
+					<far>8.0</far>
+				  </clip>
+				</camera>
+				<plugin name="kinect_camera_controller" filename="libgazebo_ros_openni_kinect.so">
+				  <cameraName>kinect_camera</cameraName>
+				  <alwaysOn>true</alwaysOn>
+				  <updateRate>10</updateRate>
+				  <imageTopicName>rgb/image_raw</imageTopicName>
+				  <depthImageTopicName>depth/image_raw</depthImageTopicName>
+				  <pointCloudTopicName>depth/points</pointCloudTopicName>
+				  <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
+				  <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+				  <frameName>kinect_camera_optical</frameName>
+				  <baseline>0.1</baseline>
+				  <distortion_k1>0.0</distortion_k1>
+				  <distortion_k2>0.0</distortion_k2>
+				  <distortion_k3>0.0</distortion_k3>
+				  <distortion_t1>0.0</distortion_t1>
+				  <distortion_t2>0.0</distortion_t2>
+				  <pointCloudCutoff>0.4</pointCloudCutoff>
+				  <robotNamespace>/</robotNamespace>
+				</plugin>
+			  </sensor>
+		</gazebo>
+
+	</xacro:if>
+
+
+
+</xacro:if>
+
+
+<!-- .....................MULTI WHEEL DIFF DRIVE ................................... -->
+
+<gazebo>
+	<plugin name="diffdrive_plugin_multiwheel" filename="libdiffdrive_plugin_multi_wheel.so">
+		<robotNamespace></robotNamespace>
+		<updateRate>100.0</updateRate> 
+		<leftJoints>back_left_wheel_joint front_left_wheel_joint</leftJoints>
+		<rightJoints>back_right_wheel_joint front_right_wheel_joint</rightJoints>
+		<wheelSeparation>${wheel_base}</wheelSeparation>
+		<wheelDiameter>${2*wheel_radius}</wheelDiameter>
+		<robotBaseFrame>base_footprint</robotBaseFrame>
+		<torque>${wheel_torque}</torque>        
+		<commandTopic>/cmd_vel</commandTopic>
+		<odometryTopic>odom</odometryTopic>
+		<odometryFrame>odom</odometryFrame>
+		<publishOdometryTf>true</publishOdometryTf>
+		<publishOdometryMsg>true</publishOdometryMsg>
+	</plugin>
+</gazebo>
+
+<!-- ........................... 2D LIDAR PLUGIN ................................... -->
+
+<xacro:if value="$(arg two_d_lidar_enabled)">
+
+   <gazebo reference="two_d_lidar">
+      <gravity>true</gravity>
+      <sensor type="ray" name="two_d_lidar">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>true</visualize>
+        <update_rate>${two_d_lidar_update_rate}</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>${two_d_lidar_sample_size}</samples>
+              <resolution>1</resolution>
+              <min_angle>${radians(two_d_lidar_min_angle)}</min_angle>
+              <max_angle>${radians(two_d_lidar_max_angle)}</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>${two_d_lidar_min_range}</min>
+            <max>${two_d_lidar_max_range}</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </ray>
+        <plugin name="gazebo_ros_laser" filename="libgazebo_ros_laser.so">
+          <topicName>scan</topicName>
+          <frameName>two_d_lidar</frameName>
+          <robotNamespace>/</robotNamespace>
+        </plugin>
+      </sensor>
+   </gazebo>
+
+</xacro:if>
+
+
+
+<!--.............................. GPS PLUGIN ...................................... -->
+
+<gazebo>
+	<plugin name="gazebo_ros_gps" filename="libhector_gazebo_ros_gps.so">
+	  <alwaysOn>1</alwaysOn>
+	  <updateRate>5</updateRate>
+	  <bodyName>base_link</bodyName>
+	  <topicName>fix</topicName>
+	  <velocityTopicName>vel</velocityTopicName>
+	  <drift>5.0 5.0 5.0</drift>
+	  <gaussianNoise>0 0 0</gaussianNoise>
+	  <velocityDrift>0 0 0</velocityDrift>
+	  <velocityGaussianNoise>0 0 0</velocityGaussianNoise>
+	  <frameId>gps_frame</frameId>
+	  <referenceLatitude>$(arg latitude)</referenceLatitude>
+	  <referenceLongitude>$(arg longitude)</referenceLongitude> 
+	</plugin>
+</gazebo>
+
+
+<!--............................... IMU PLUGIN ..................................... -->
+
+<gazebo>
+  	<plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+        <updateRate>50.0</updateRate>
+        <bodyName>base_link</bodyName>
+        <topicName>/imu</topicName>
+        <serviceName>/imu/calibrate</serviceName>
+        <accelOffset>0.0 0.0 0.0</accelOffset>
+        <accelDrift>0.0 0.0 0.0</accelDrift>
+        <accelDriftFrequency>0.0 0.0 0.0</accelDriftFrequency>
+        <accelGaussianNoise>0.0 0.0 0.0</accelGaussianNoise>
+        <rateOffset>0.0 0.0 0.0</rateOffset>
+        <rateDrift>0.0 0.0 0.0</rateDrift>
+        <rateDriftFrequency>0.0 0.0 0.0</rateDriftFrequency>
+        <rateGaussianNoise>0.0 0.0 0.0</rateGaussianNoise>
+        <headingOffset>0.0</headingOffset>
+        <headingDrift>0.0</headingDrift>
+        <headingDriftFrequency>0.0</headingDriftFrequency>
+        <headingGaussianNoise>0.0</headingGaussianNoise>
+        <rpyOffset>0.0 0.0 0.0</rpyOffset>
+        <xyzOffset>0.0 0.0 0.0</xyzOffset>
+        <gaussianNoise>0.0</gaussianNoise>
+        <frameName>imu_frame</frameName>
+  	</plugin>
+  
+  	<plugin name="magnetometer" filename="libhector_gazebo_ros_magnetic.so">
+        <updateRate>50.0</updateRate>
+        <bodyName>base_link</bodyName>
+        <topicName>/mag</topicName>
+        <offset>0 0 0</offset>
+        <drift>0.0 0.0 0.0</drift>
+        <gaussianNoise>1.3e-2 1.3e-2 1.3e-2</gaussianNoise>
+        <frameId>mag_frame</frameId>
+    </plugin>   
+</gazebo>
+
+<!--................................................................................. -->
+
+</robot>

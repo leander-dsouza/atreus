@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>atreus</name>
+  <version>0.0.0</version>
+  <description>The atreus package</description>
+
+  <maintainer email="leanderdsouza1234@gmail.com">Leander-Stephen-D'Souza</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Internal dependencies -->
+  <depend>gazebo_ros</depend>
+  <depend>roscpp</depend>
+  <depend>pcl_conversions</depend>
+  <depend>hector_gazebo_plugins</depend>
+  <depend>mapviz</depend>
+  <depend>move_base</depend>
+  <depend>dwa_local_planner</depend>
+  <depend>teb_local_planner</depend>
+
+  <!-- External dependencies -->
+  <depend>ar_track_alvar</depend>
+  <depend>gzsatellite</depend>
+  <depend>realsense_gazebo_plugin</depend>
+  <depend>aws_robomaker_small_warehouse_world</depend>
+  
+  <export>
+    <gazebo_ros
+      plugin_path="${prefix}/lib"
+      gazebo_media_path="${prefix}"
+      gazebo_model_path="${prefix}/models"
+      />
+  </export>
+</package>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<launch>
+
+
+  <!-- CONFIGURABLE ARGUMENTS -->
+
+  <arg name="global_planner"    default="carrot"    doc="Global planner can be either navfn or carrot" /> 
+  <arg name="local_planner"     default="teb"       doc="Local planner can be either dwa, base or teb"/>"/>
+
+
+
+  <!-- MAP SERVER -->
+  <include file="$(find atreus)/launch/map_server.launch"/>  
+
+  <!-- AMCL -->
+  <include file="$(find atreus)/launch/amcl.launch"/>
+
+  <!-- MOVE_BASE -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+
+    <remap from="cmd_vel" to="/cmd_vel"/>
+    <remap from="odom" to="/odom"/>
+    <remap from="scan" to="/scan"/>
+
+    <param name="controller_frequency" value="10.0"/>
+
+    <rosparam file="$(find atreus)/config/move_base/move_base.yaml" command="load"/>
+
+    <!-- COSTMAPS -->
+
+    <rosparam file="$(find atreus)/config/move_base/costmaps/local_costmap.yaml" command="load"/>
+    <rosparam file="$(find atreus)/config/move_base/costmaps/global_costmap.yaml" command="load"/>
+
+    <!-- PLANNER CONFIGURATIONS -->
+
+    <!-- GLOBAL -->
+    <rosparam file="$(find atreus)/config/move_base/global_planner/$(arg global_planner)/$(arg global_planner)_planner.yaml" command="load" />
+
+    <!-- LOCAL -->
+    <rosparam file="$(find atreus)/config/move_base/local_planner/$(arg local_planner)/$(arg local_planner)_planner.yaml" command="load" />
+
+   </node>
+
+</launch>

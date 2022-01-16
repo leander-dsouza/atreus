@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+<!-- Customisable Parameters -->
+
+<arg name="rgb_topic"               default="/d435/camera/color/image_raw"/>
+<arg name="depth_topic"             default="/d435/camera/depth/image_raw"/>
+<arg name="rgb_camera_info_topic"   default="/d435/camera/color/camera_info"/>
+
+<arg name="odom_topic"              default="/odom"/>
+<arg name="laser_topic"             default="/scan"/>
+
+<arg name="database_path"           default="$(find atreus)/config/mapping/maps/warehouse_map/warehouse_map.db"/>
+<arg name="rtabmap_args"            default="-d"/>   
+                                    <!-- Save map - keep it blank and start localization mode-->
+
+  <group ns="rtabmap">
+
+  <!-- ............................. RGBD_SYNC NODE ...................................-->  
+
+      <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
+        <remap from="rgb/image"       to="$(arg rgb_topic)"/>
+        <remap from="depth/image"     to="$(arg depth_topic)"/>
+        <remap from="rgb/camera_info" to="$(arg rgb_camera_info_topic)"/>
+
+        <param name="approx_sync"     value="true"/> 
+
+        <!-- Published -->
+        <!-- <remap from="rgbd_image"      to="rgbd_image"/> --> 
+        
+      </node>
+
+
+  <!-- ............................. RTABMAP NODE ....................................-->  
+      
+      <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="$(arg rtabmap_args)">
+        
+        <rosparam command="load" file="$(find atreus)/config/mapping/rtabmap/slam_rtabmap_lidar.yaml" />
+        <param name="database_path"   type="string" value="$(arg database_path)"/>
+
+        <!-- Subscribed -->
+
+        <remap from="odom"          to="$(arg odom_topic)"/>
+        <remap from="scan"          to="$(arg laser_topic)"/>
+        <!-- <remap from="rgbd_image"    to="rgbd_image"/> -->
+
+        <remap from="grid_map" to="/map"/>
+      </node>
+
+  </group>
+
+
+</launch>

@@ -1,0 +1,48 @@
+#Configuation for robot odometry EKF
+#
+
+two_d_mode: true
+diagnostics_agg: true
+yaw_offset: 0
+
+frequency: 10                           # failed to meet update rate error
+publish_tf: true                        # Enabled for generating map -> odom
+predict_to_current_time: true           # Transform from base_footprint to map was unavailable, using latest,  nk: https://answers.ros.org/question/300345/robot-localization-package-transform-from-base_link-to-odom-was-unavailable-for-the-time-requested-using-latest-instead-imugps/?answer=301688#post-id-301688
+
+world_frame: map
+map_frame: map
+odom_frame: odom
+base_link_frame: base_footprint
+
+
+
+odom0: /noisy_odom
+odom0_config: [false, false, false, 
+               false, false, false, 
+               true,  true,  false,     # Use velocities only (x*, y*, theta*)
+               false, false, true,
+               false, false, false]
+odom0_relative: false
+
+imu0: /imu
+imu0_config: [false, false, false,
+              false, false, true,
+              false, false, false,      # Use yaw and yaw*
+              false, false, true,
+              true,  false, false]
+imu0_differential: false
+imu0_relative: true
+
+
+odom1: /odometry/gps
+odom1_config: [true, true,  false,
+              false, false, false,      # Use x and y
+              false, false, false,
+              false, false, false,
+              false, false, false]
+odom1_differential: false
+
+# The general rule of thumb for the _differential parameter is that if a give robot has only one source of orientation data, then the differential parameter should be set to false. 
+# If there are N sources, users can set the _differential parameter to true for N−1 of them, or simply ensure that the covariance values are large enough to eliminate oscillations.
+
+# odom only velocities, redundancy in IMU for orientation

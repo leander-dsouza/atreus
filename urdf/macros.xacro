@@ -1,0 +1,496 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="atreus">
+
+<!--................................ INERTIA MATRICES .............................. -->
+
+  <xacro:macro name="cylinder_inertia" params="m r h">
+    <inertia ixx="${m * (3 * r * r + h * h) / 12}" ixy="0" ixz="0"
+      iyy="${m * (3 * r * r + h * h) / 12}" iyz="0"
+      izz="${m * r * r / 2}"
+    />
+  </xacro:macro>
+
+  <xacro:macro name="box_inertia" params="m x y z">
+    <inertia ixx="${m * (y * y + z * z) / 12}" ixy="0" ixz="0"
+      iyy="${m * (x * x + z * z) / 12}" iyz="0"
+      izz="${m * (x * x + z * z) / 12}"
+    />
+  </xacro:macro>
+
+  <xacro:macro name="sphere_inertia" params="m r">
+    <inertia ixx="${2 * m * r * r / 5}" ixy="0" ixz="0"
+      iyy="${2 * m * r * r / 5}" iyz="0"
+      izz="${2 * m * r * r / 5}"
+    />
+  </xacro:macro>
+
+<!-- ............................... WHEEL DEFINITION .............................. -->
+
+ <xacro:macro name="wheel" params="cardinality dexterity fb lr">
+
+   <link name="${cardinality}_${dexterity}_wheel">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 ${pi/2} ${pi/2}" />
+      <geometry>
+       <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 ${pi/2} ${pi/2}" />
+      <geometry>
+       <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 ${pi/2} ${pi/2}" />
+      <mass value="${wheel_mass}"/>
+      <xacro:cylinder_inertia m="${wheel_mass}" r="${wheel_radius}" h="${wheel_width}"/>
+    </inertial>
+   </link>
+
+   <joint name="${cardinality}_${dexterity}_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${cardinality}_${dexterity}_wheel"/>
+      <origin xyz="${fb*(wheel_pos-chassis_length/4+wheel_radius)} ${lr*(wheel_width/2+chassis_width/2)} ${wheel_radius}" rpy="0 0 0" /> 
+      <axis xyz="0 1 0" rpy="0 0 0" />
+    </joint>
+
+   <gazebo reference="${cardinality}_${dexterity}_wheel">
+      <material>Gazebo/Black</material>
+   </gazebo>
+
+  </xacro:macro>
+
+<!-- .............................. SIDE CAMERA DEFINITION .......................... -->
+
+ <xacro:macro name="side_camera" params="dexterity lr">>
+
+    <!-- SIDE CAMERA HOLDER -->
+
+    <link name="${dexterity}_side_camera_holder">
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <box size="0.02 0.02 ${side_camera_height}"/>
+          </geometry>
+      </collision>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <box size="0.02 0.02 ${side_camera_height}"/>
+          </geometry>
+          <material name="purple"/>
+      </visual>
+
+      <inertial>
+          <mass value="0.01"/>
+          <xacro:box_inertia m="0.01" x="0.02" y="0.02" z = "${side_camera_height}"/>
+      </inertial>
+
+    </link>
+
+    <joint name="${dexterity}_side_camera_holder_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 ${lr*(chassis_width/2-0.02/2)} ${chassis_height/2+side_camera_height/2+chassis_ground_clearance}" />
+        <parent link="base_link"/>
+        <child link="${dexterity}_side_camera_holder"/>
+    </joint>
+
+
+    <gazebo reference="${dexterity}_side_camera_holder">
+        <material>Gazebo/Purple</material>
+    </gazebo>
+    
+    <!-- SIDE CAMERA -->
+
+      <link name="${dexterity}_side_camera">
+
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <box size="0.02 0.08 0.02"/>
+            </geometry>
+        </collision>
+
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <box size="0.02 0.08 0.02"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+
+        <inertial>
+            <mass value="0.01"/>
+            <xacro:box_inertia m="0.01" x="0.02" y="0.08" z = "0.02"/>
+        </inertial>
+
+      </link>
+
+    <joint name="${dexterity}_side_camera_joint" type="fixed">
+        <origin rpy="0 0 ${lr*(pi/2)}" xyz="0 0 ${side_camera_height/2 + 0.02/2}" />
+        <parent link="${dexterity}_side_camera_holder"/>
+        <child link="${dexterity}_side_camera"/>
+    </joint>
+
+    <gazebo reference="${dexterity}_side_camera">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <!-- SENSOR PLUGIN -->
+
+    <gazebo reference="${dexterity}_side_camera">
+
+        <sensor type="camera" name="${dexterity}_side_camera">
+          <update_rate>30.0</update_rate>
+
+          <camera name="head">
+            <horizontal_fov>${radians(side_camera_horizontal_fov)}</horizontal_fov>
+            <image>
+                <width>640</width>
+                <height>480</height>
+                <format>RGB_INT8</format>
+            </image>
+            <clip>
+                <near>0.1</near>
+                <far>100</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.007</stddev>
+            </noise>
+          </camera>
+
+          <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+            <alwaysOn>true</alwaysOn>
+            <cameraName>${dexterity}_side_camera</cameraName>
+            <imageTopicName>image_raw</imageTopicName>
+            <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+            <frameName>${dexterity}_side_camera</frameName>
+            <hackBaseline>0.07</hackBaseline>
+            <distortionK1>0.0</distortionK1>
+            <distortionK2>0.0</distortionK2>
+            <distortionK3>0.0</distortionK3>
+            <distortionT1>0.0</distortionT1>
+            <distortionT2>0.0</distortionT2>
+          </plugin>
+        </sensor>
+      </gazebo>
+
+ </xacro:macro>
+
+
+
+<!-- ............................ ULTRASONICS DEFINITION .............................. -->
+
+<xacro:macro name="ultrasonic_sensor" params="face dexterity lr">
+
+  <link name="${face}_${dexterity}_ultrasonic_sensor">
+
+   <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.03 0.03 0.03"/>
+        </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.03 0.03 0.03"/>
+        </geometry>
+      <material name="yellow"/>
+    </visual>
+
+    <inertial>
+        <mass value="0.01"/>
+        <xacro:box_inertia m="0.01" x="0.03" y="0.03" z = "0.03"/>
+    </inertial>
+  </link> 
+
+  <joint name="${face}_${dexterity}_ultrasonic_sensor_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="${face}_${dexterity}_ultrasonic_sensor"/>
+
+    
+    <!-- Conditioning -->
+
+    <xacro:if value="${face == 'front'}">
+
+        <origin xyz="${chassis_length/2 + 0.03/2} ${lr*chassis_width/3} ${chassis_ground_clearance}" rpy="0 0 0" /> 
+
+    </xacro:if>  
+
+
+    <xacro:if value="${face == 'side'}">
+
+      <origin xyz="0 ${lr*(chassis_width/2 + 0.03/2)} ${chassis_ground_clearance}" rpy="0 0 ${lr*pi/2}" />   
+
+    </xacro:if>   
+
+  </joint>
+
+
+  <gazebo reference="${face}_${dexterity}_ultrasonic_sensor">
+    <material>Gazebo/Yellow</material>
+  </gazebo>
+
+
+  <gazebo reference="${face}_${dexterity}_ultrasonic_sensor">
+      <sensor type="ray" name="TeraRanger">
+        <visualize>false</visualize>
+        <ray>
+           <scan>
+              <horizontal>
+                 <samples>${ultrasonic_horizontal_samples}</samples>
+                 <resolution>1</resolution>
+                 <min_angle>${radians(ultrasonic_horizontal_min_angle)}</min_angle>
+                 <max_angle>${radians(ultrasonic_horizontal_max_angle)}</max_angle>
+              </horizontal>
+              <vertical>
+                 <samples>${ultrasonic_vertical_samples}</samples>
+                 <resolution>1</resolution>
+                 <min_angle>${radians(ultrasonic_vertical_min_angle)}</min_angle>
+                 <max_angle>${radians(ultrasonic_vertical_max_angle)}</max_angle>
+              </vertical>
+           </scan>
+           <range>
+              <min>${ultrasonic_min_range}</min>
+              <max>${ultrasonic_max_range}</max>
+              <resolution>0.02</resolution>
+           </range>
+        </ray>
+        <plugin filename="libgazebo_ros_range.so" name="gazebo_ros_range">
+           <updateRate>50</updateRate>
+           <gaussianNoise>0.005</gaussianNoise>
+           <alwaysOn>true</alwaysOn>
+           <topicName>ultrasonic_${face}_${dexterity}</topicName>
+           <frameName>${face}_${dexterity}_ultrasonic_sensor</frameName>
+           <radiation>ultrasound</radiation>
+           <fov>${radians(ultrasonic_fov)}</fov>
+        </plugin>
+     </sensor>
+   </gazebo>
+
+</xacro:macro>
+
+
+<!-- ........................ SENSOR PLATE SETUP DEFINITION .......................... -->
+
+
+ <xacro:macro name="sonar_plate_setup" params="dexterity type lr">
+
+    <xacro:if value="${type == 'rod'}">
+
+      <link name="sonar_plate_setup_${dexterity}_${type}">
+
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <box size="0.02 0.02 ${obstacle_feasibility_rod_height}"/>
+            </geometry>
+        </collision>
+
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <box size="0.02 0.02 ${obstacle_feasibility_rod_height}"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+
+        <inertial>
+            <mass value="0.01"/>
+            <xacro:box_inertia m="0.01" x="0.02" y="0.02" z = "${obstacle_feasibility_rod_height}"/>
+        </inertial>
+
+      </link>
+
+      <joint name="sonar_plate_setup_${dexterity}_${type}_joint" type="fixed">
+          <origin rpy="0 0 0" xyz="${chassis_length/2 - 0.02/2} ${lr*(obstacle_feasibility_plate_size/2 + 0.02/2)} ${chassis_height/2 + chassis_ground_clearance + obstacle_feasibility_rod_height/2}" />
+          <parent link="base_link"/>
+          <child link="sonar_plate_setup_${dexterity}_${type}"/>
+      </joint>
+
+      <gazebo reference="sonar_plate_setup_${dexterity}_${type}">
+          <material>Gazebo/Black</material>
+      </gazebo>
+
+    </xacro:if>  
+
+
+
+    <xacro:if value="${type == 'plate'}">
+
+      <link name="sonar_plate_setup_${dexterity}_${type}">
+
+        <!-- Change Axis of Rotation-->
+        <collision>
+          <origin xyz="0 0 ${obstacle_feasibility_plate_size/3}" rpy="0 0 0" />
+            <geometry>
+              <box size="0.02 ${obstacle_feasibility_plate_size} ${obstacle_feasibility_plate_size}"/>
+            </geometry>
+        </collision>
+
+        <visual>
+          <origin xyz="0 0 ${obstacle_feasibility_plate_size/3}" rpy="0 0 0" />
+            <geometry>
+              <box size="0.02 ${obstacle_feasibility_plate_size} ${obstacle_feasibility_plate_size}"/>
+            </geometry>
+            <material name="green"/>
+        </visual>
+
+        <inertial>
+            <mass value="0.01"/>
+            <xacro:box_inertia m="0.01" x="0.02" y="${obstacle_feasibility_plate_size}" z = "${obstacle_feasibility_plate_size}"/>
+        </inertial>
+
+      </link>
+
+      <joint name="sonar_plate_setup_${dexterity}_${type}_joint" type="fixed">
+          <origin rpy="0 ${radians(obstacle_feasibility_alpha)} 0" xyz="0 ${0.02/2 + obstacle_feasibility_plate_size/2} ${obstacle_feasibility_rod_height/2}" />
+          <parent link="sonar_plate_setup_right_rod"/>
+          <child link="sonar_plate_setup_${dexterity}_${type}"/>
+      </joint>
+
+      <gazebo reference="sonar_plate_setup_${dexterity}_${type}">
+          <material>Gazebo/Green</material>
+      </gazebo>
+
+    </xacro:if>  
+
+
+ </xacro:macro>
+
+
+<!-- ........................ PLATE SENSORS DEFINITION ............................... -->
+
+
+ <xacro:macro name="plate_sensors" params="placement fb lr">
+
+    <link name="${placement}">
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <box size="0.03 0.03 0.03"/>
+          </geometry>
+      </collision>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <box size="0.03 0.03 0.03"/>
+          </geometry>
+          <material name="yellow"/>
+      </visual>
+
+      <inertial>
+          <mass value="0.01"/>
+          <xacro:box_inertia m="0.01" x="0.03" y="0.03" z = "0.03"/>
+      </inertial>
+
+    </link>
+
+    <joint name="${placement}_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="${0.03/2+0.02/2} ${lr*(obstacle_feasibility_plate_size/3)} ${fb*obstacle_feasibility_L/2 + obstacle_feasibility_plate_size/3 + 0.05*obstacle_feasibility_plate_size}" /> <!-- Shift measuring L from a purely horizontal axis of centre plate to a upper half horizontal (0.05*obstacle_feasibility_plate_size) -->
+        <parent link="sonar_plate_setup_centre_plate"/>
+        <child link="${placement}"/>
+    </joint>
+
+    <gazebo reference="${placement}">
+        <material>Gazebo/Yellow</material>
+    </gazebo>
+
+
+
+    <gazebo reference="${placement}">
+        <sensor type="ray" name="TeraRanger">
+          <visualize>false</visualize>
+          <ray>
+             <scan>
+                <horizontal>
+                   <samples>${obs_ultrasonic_horizontal_samples}</samples>
+                   <resolution>1</resolution>
+                   <min_angle>${radians(obs_ultrasonic_horizontal_min_angle)}</min_angle>
+                   <max_angle>${radians(obs_ultrasonic_horizontal_max_angle)}</max_angle>
+                </horizontal>
+                <vertical>
+                   <samples>${obs_ultrasonic_vertical_samples}</samples>
+                   <resolution>1</resolution>
+                   <min_angle>${radians(obs_ultrasonic_vertical_min_angle)}</min_angle>
+                   <max_angle>${radians(obs_ultrasonic_vertical_max_angle)}</max_angle>
+                </vertical>
+             </scan>
+             <range>
+                <min>${obs_ultrasonic_min_range}</min>
+                <max>${obs_ultrasonic_max_range}</max>
+                <resolution>0.02</resolution>
+             </range>
+          </ray>
+          <plugin filename="libgazebo_ros_range.so" name="gazebo_ros_range">
+             <updateRate>50</updateRate>
+             <gaussianNoise>0.005</gaussianNoise>
+             <alwaysOn>true</alwaysOn>
+             <topicName>${placement}</topicName>
+             <frameName>${placement}</frameName>
+             <radiation>ultrasound</radiation>
+             <fov>${radians(obs_ultrasonic_fov)}</fov>
+          </plugin>
+       </sensor>
+    </gazebo>
+
+ </xacro:macro>
+
+
+
+ <!-- .............................. SIDE CAMERA DEFINITION .......................... -->
+
+ <xacro:macro name="stereo_camera" params="dexterity lr">
+
+    <link name="${dexterity}_stereo_camera">
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <box size="0.01 0.01 0.01"/>
+          </geometry>
+      </collision>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <box size="0.01 0.01 0.01"/>
+          </geometry>
+          <material name="yellow"/>
+      </visual>
+
+      <inertial>
+          <mass value="0.01"/>
+          <xacro:box_inertia m="0.01" x="0.01" y="0.01" z = "0.01"/>
+      </inertial>
+
+    </link>
+
+    <joint name="${dexterity}_stereo_camera_joint" type="fixed">
+        <!-- X coordinate includes plate's calculation as well -->
+        <origin rpy="0 0 0" xyz="${0.01/2 + 0.02/2} ${lr*front_camera_baseline/2} 0" />
+        <parent link="front_stereo_camera_plate"/>
+        <child link="${dexterity}_stereo_camera"/>
+    </joint>
+
+    <gazebo reference="${dexterity}_stereo_camera">
+        <material>Gazebo/Yellow</material>
+    </gazebo>
+
+ </xacro:macro>
+
+
+<!-- ................................................................................. -->
+
+</robot>

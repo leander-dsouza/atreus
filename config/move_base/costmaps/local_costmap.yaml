@@ -1,0 +1,106 @@
+local_costmap:
+
+  
+  global_frame: map
+  robot_base_frame: base_footprint
+  robot_radius: 0.5 # distance a circular robot should be clear of the obstacle
+
+  update_frequency : 5.0
+  publish_frequency: 2.0
+
+  rolling_window: true
+  width         : 5.0
+  height        : 5.0
+
+
+  plugins:
+    # - name: static_layer
+    #   type: 'costmap_2d::StaticLayer'
+    - name: obstacle_laser_layer
+      type: 'costmap_2d::ObstacleLayer'
+    # - name: obstacle_vo_layer
+    #   type: 'costmap_2d::ObstacleLayer'
+    #- name: obstacle_rgbd_layer
+    #  type: 'costmap_2d::ObstacleLayer'
+    # - name: footprint_layer
+    #   type: 'costmap_2d::FootprintLayer'
+    - name: inflation_layer
+      type: 'costmap_2d::InflationLayer'
+
+  # static_layer:
+  #   enabled  : true
+  #   map_topic: /warehouse
+
+  obstacle_laser_layer:
+    enabled: true
+    observation_sources: base_scan
+    combination_method: 1 # @todo only with 1 works on the robot: otherwise the map walls are cleared
+
+    base_scan:
+      sensor_frame: two_d_lidar 
+      data_type: LaserScan
+      topic: /scan
+      observation_persistence: 0.0
+      inf_is_valid: true
+      marking: true
+      clearing: true
+      raytrace_range: 5.5
+      obstacle_range: 5.0
+
+  # obstacle_vo_layer:
+  #   enabled: true
+  #   observation_sources: vo_cloud
+  #   combination_method: 0
+
+  #   vo_cloud:
+  #     sensor_frame: d435_camera
+  #     data_type: PointCloud2
+  #     topic: /d435/camera/depth_registered/points
+  #     observation_persistence: 0.0
+  #     marking: true
+  #     clearing: false
+  #     raytrace_range: 1.0
+  #     obstacle_range: 100.0
+
+  # obstacle_rgbd_layer:
+  #   enabled: false
+  #   observation_sources: rgbd_scan
+  #   combination_method: 1
+
+  #   rgbd_scan:
+  #     sensor_frame: base_footprint
+  #     data_type: LaserScan
+  #     topic: rgbd_scan
+  #     expected_update_rate: 0.5
+  #     observation_persistence: 0.0
+  #     inf_is_valid: true
+  #     marking: true
+  #     clearing: true
+  #     raytrace_range: 3.5
+  #     obstacle_range: 3.2
+  #     blanking_range: 0.5
+  #     min_obstacle_height: -0.1
+  #     max_obstacle_height: 0.2
+  #     debug: true
+
+  #   rgbd_cloud:
+  #     sensor_frame: base_footprint
+  #     data_type: PointCloud2
+  #     topic: floor_filter_xtion/filtered_cloud
+  #     expected_update_rate: 1.0
+  #     observation_persistence: 0.0
+  #     inf_is_valid: true
+  #     marking: true
+  #     clearing: true
+  #     raytrace_range: 3.5
+  #     obstacle_range: 3.3
+  #     min_obstacle_height: 0.02
+  #     max_obstacle_height: 1.8
+
+  # footprint_layer:
+  #   enabled: true
+
+  inflation_layer:
+    enabled            : true
+    inflation_radius   : 0.45
+    cost_scaling_factor: 2.0

@@ -1,0 +1,9 @@
+#Configuation for gzsatellite
+
+name: "LA Park"
+jpg_quality: 120
+zoom: 21       # 0 <= zoom <= 22
+width: 100
+height: 100
+shift_ns: 0
+shift_ew: 0.19

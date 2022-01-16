@@ -1,0 +1,13 @@
+material artag9/Marker
+{
+    technique
+    {
+    pass
+    {
+        texture_unit
+        {
+            texture MarkerData_9.png
+        }
+    }
+    }
+}

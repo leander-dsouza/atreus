@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+
+<!--............................ CONFIGURABLE PARAMETERS ..............................-->
+
+<arg name="front_camera_enabled"  				default="true"/>
+<arg name="side_camera_enabled"   				default="true"/>
+<arg name="ultrasonic_enabled"    				default="true"/>
+<arg name="two_d_lidar_enabled"   				default="true"/>
+<arg name="obstacle_feasibility_mode_enabled"   default="false"/>
+<arg name="gazebo_enabled"   	  				default="false"/>
+<arg name="rviz_config"   	  					default="entire_setup.rviz"/>
+
+
+<!-- ........................... CONDITIONAL XACRO CALL .............................. -->
+
+
+<group unless="$(arg gazebo_enabled)">
+
+	<param name="robot_description" command="$(find xacro)/xacro $(find atreus)/urdf/atreus.xacro
+
+	    front_camera_enabled:=$(arg front_camera_enabled)
+	    side_camera_enabled:=$(arg side_camera_enabled)
+	    ultrasonic_enabled:=$(arg ultrasonic_enabled)
+	    two_d_lidar_enabled:=$(arg two_d_lidar_enabled)
+	    obstacle_feasibility_mode_enabled:=$(arg obstacle_feasibility_mode_enabled)
+
+	    " />
+
+
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+</group>
+
+<!-- ............................... RVIZ LAUNCH ..................................... -->
+
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find atreus)/config/rviz/$(arg rviz_config)"/>
+
+<!-- ................................................................................. -->
+
+</launch>

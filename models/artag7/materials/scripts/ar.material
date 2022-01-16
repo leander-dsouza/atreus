@@ -1,0 +1,13 @@
+material ArTag7/Marker
+{
+    technique
+    {
+    pass
+    {
+        texture_unit
+        {
+            texture MarkerData_7.png
+        }
+    }
+    }
+}

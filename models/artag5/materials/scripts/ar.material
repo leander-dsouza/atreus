@@ -1,0 +1,13 @@
+material artag5/Marker
+{
+    technique
+    {
+    pass
+    {
+        texture_unit
+        {
+            texture MarkerData_5.png
+        }
+    }
+    }
+}

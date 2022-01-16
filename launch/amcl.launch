@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
+    
+    <param name="base_frame_id" value="base_footprint"/>
+    <remap from="scan" to="/scan" />
+    <remap from="map" to="/warehouse" />
+    
+  </node>
+
+</launch>

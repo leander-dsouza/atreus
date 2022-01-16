@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<launch>
+
+
+<!--............................ CONFIGURABLE PARAMETERS .................................-->
+
+<arg name="mapviz_mode"     default="general"/> <!-- general / localization / custom_global_planner --> 
+
+<!--......................................................................................-->
+
+
+<!-- MapViz custom configuration file -->
+
+<node pkg="mapviz" type="mapviz" name="mapviz">
+    <param name="config" value="$(find atreus)/config/mapviz/$(arg mapviz_mode).config"/>
+</node>
+
+
+<!-- Connect MapViz origin with incoming GPS coordinates -->
+
+<node pkg="swri_transform_util" type="initialize_origin.py" name="initialize_origin">
+
+
+    <!-- Choose frame alias -->
+    <param if="$(eval mapviz_mode=='localization')" name="local_xy_frame" value="/map"/>
+    <param unless="$(eval mapviz_mode=='localization')" name="local_xy_frame" value="/mapviz_frame"/> 
+
+    <!-- Automatically sets origin based on topic -->
+    <param name="local_xy_origin" value="auto"/>            
+    <remap from="fix"  to="/fix"/>
+
+</node>
+    
+<!-- Defines Transform depending upon angle and GPS coordinates -->
+
+<node unless="$(eval mapviz_mode=='localization')" pkg="swri_transform_util" type="gps_transform_publisher" name="gps_transform_publisher">
+
+    <param name="parent_frame_id" value="mapviz_frame"/>
+    <param name="child_frame_id" value="robot_frame"/>
+    <remap from="gps" to="/gps_fix"/>
+</node>
+
+
+</launch>

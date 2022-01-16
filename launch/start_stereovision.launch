@@ -1,0 +1,7 @@
+<launch>
+
+  <node ns="stereocamera" name="stereo_image_proc" pkg="stereo_image_proc" type="stereo_image_proc" output="screen">
+    <rosparam file="$(find atreus)/config/stereo/stereo.yaml"/>
+  </node>
+
+</launch>

@@ -1,0 +1,13 @@
+material artag2/Marker
+{
+    technique
+    {
+    pass
+    {
+        texture_unit
+        {
+            texture MarkerData_2.png
+        }
+    }
+    }
+}

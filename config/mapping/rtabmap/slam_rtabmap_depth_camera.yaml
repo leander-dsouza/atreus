@@ -1,0 +1,26 @@
+frame_id:        base_footprint
+map_frame_id:    map
+odom_frame_id:   odom
+
+subscribe_depth: false
+subscribe_rgb:   true
+subscribe_rgbd:  true
+subscribe_scan:  false
+
+approx_sync:     true
+
+RGBD/NeighborLinkRefining:      true
+RGBD/ProximityBySpace:          true
+RGBD/AngularUpdate:             0.01
+RGBD/LinearUpdate:              0.01
+RGBD/OptimizeFromGraphEnd:      false
+RGBD/ProximityPathMaxNeighbors: 10
+
+Grid/FromDepth: true
+Grid/3D: true
+
+Reg/Force3DoF:  true
+Reg/Strategy:   1
+
+Icp/VoxelSize:                  0.05
+Icp/MaxCorrespondenceDistance:  0.1

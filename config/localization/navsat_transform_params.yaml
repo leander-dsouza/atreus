@@ -1,0 +1,9 @@
+#Configuation for navsat_transform_node
+
+magnetic_declination_radians: 0
+yaw_offset: rad(pi/2)
+
+publish_filtered_gps: true
+broadcast_cartesian_transform: true
+broadcast_cartesian_transform_as_parent_frame: true
+use_odometry_yaw: true

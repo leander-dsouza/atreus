@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+
+<!--............................ CONFIGURABLE PARAMETERS .................................-->
+
+  <arg name="localization_type"                 default="ekf"/>     <!-- ekf/ukf -->
+  
+  <!-- Choice of Odometry (Precise and Continuous / Accurate and Discrete) -->
+  <arg name="localization_local_frame_enabled"  default="true"/>
+  <arg name="localization_global_frame_enabled" default="true"/>
+
+
+
+  <!-- ................. ....... EKF/UKF LOCALIZATION NODES ...............................-->
+
+
+  <!-- LOCAL FRAME -->
+
+  <group if="$(arg localization_local_frame_enabled)">
+
+    <node pkg= "robot_localization" type="$(arg localization_type)_localization_node" name= "$(arg localization_type)_localization_local_frame">
+
+      <rosparam command="load" file="$(find atreus)/config/localization/$(arg localization_type)_localization_local_frame_params.yaml" />
+
+      <!-- Published -->
+
+      <remap from="odometry/filtered" to="/odometry/fused/local" />
+    </node>
+
+  </group>
+
+
+  <!-- GLOBAL FRAME -->
+
+  <group if="$(arg localization_global_frame_enabled)">
+
+    <!-- NAVSAT TRANSFORM NODE -->  
+
+    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true">
+
+      <rosparam command="load" file="$(find atreus)/config/localization/navsat_transform_params.yaml" />
+
+      <!-- Subscribed -->
+
+      <remap from="/imu/data"           to="/imu" />
+      <remap from="/gps/fix"            to="/fix" />
+      <remap from="/odometry/filtered"  to="/odometry/fused/global" /> <!--robot_localization output topic-->
+
+      <!-- Published -->
+
+      <!-- <remap from="/odometry/gps" to="/odometry/gps" /> -->
+      <!-- <remap from="/gps/filtered" to="/gps/filtered" /> -->
+    </node>
+
+
+    <node pkg= "robot_localization" type="$(arg localization_type)_localization_node" name= "$(arg localization_type)_localization_global_frame">
+
+      <rosparam command="load" file="$(find atreus)/config/localization/$(arg localization_type)_localization_global_frame_params.yaml" />
+
+      <!-- Published -->
+
+      <remap from="odometry/filtered" to="/odometry/fused/global" />
+    </node>
+
+  </group>
+
+
+  <!--.....................................................................................-->
+
+</launch>

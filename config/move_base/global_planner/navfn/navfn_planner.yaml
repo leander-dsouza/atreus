@@ -1,0 +1,5 @@
+base_global_planner: navfn/NavfnROS
+
+NavfnROS:
+  old_navfn_behavior: true
+  visualize_potential: true

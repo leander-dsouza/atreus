@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+  
+<!--............................ CONFIGURABLE PARAMETERS .............................-->
+
+<!-- URC -->
+<arg name="latitude"                            default="38.419354"/>
+<arg name="longitude"                           default="-110.781900"/>
+
+<!-- AB-1 -->
+<!-- <arg name="latitude"                            default="13.352490"/>
+<arg name="longitude"                           default="74.792834"/> -->
+
+<arg name="world"                               default="empty.world"/>
+<!-- <arg name="world"                               default="$(find aws_robomaker_small_warehouse_world)/worlds/no_roof_small_warehouse.world"/> -->
+<arg name="is_world_in_atreus"                  default="true"/> 
+
+<arg name="front_camera_enabled"                default="false"/>
+<arg name="front_camera_type"                   default="depth"/>
+<arg name="side_camera_enabled"                 default="false"/>
+<arg name="ultrasonic_enabled"                  default="false"/>
+<arg name="two_d_lidar_enabled"                 default="true"/>
+<arg name="obstacle_feasibility_mode_enabled"   default="false"/>
+
+<arg name="rviz_enabled"                        default="false"/>
+<arg name="rviz_config"   	  					        default="default_setup.rviz"/>
+
+<arg name="mapviz_enabled"                      default="false"/>
+<arg name="mapviz_mode"                         default="general"/> 
+
+<arg name="mapping_enabled"                     default="false"/>
+<arg name="mapping_method"                      default="gmapping"/>
+
+<arg name="localization_enabled"                default="false"/>
+<arg name="gzsatellite_enabled"                 default="false"/>
+<arg name="move_base_enabled"                   default="false"/>
+
+
+
+<!-- ............................. CONDITIONAL LAUNCH ................................ -->
+
+<group if="$(arg front_camera_enabled)">
+
+  <group if="$(eval front_camera_type=='depth')">
+
+    <include file="$(find atreus)/launch/depth_proc.launch"/>
+    <node name="pcl_processing_node" pkg="atreus" type="cloudy"/>
+  
+  </group>
+
+  <group if="$(eval front_camera_type=='stereo')">
+
+    <include file="$(find atreus)/launch/start_stereovision.launch"/>
+  
+  </group>
+
+</group>
+
+<group if="$(arg rviz_enabled)">
+
+  <include file="$(find atreus)/launch/rviz.launch">
+    <arg name="gazebo_enabled"  default="true"/>
+    <arg name="rviz_config"   	default="$(arg rviz_config)"/>
+  </include>
+
+</group>
+
+<group if="$(arg mapviz_enabled)">
+
+  <include file="$(find atreus)/launch/mapviz.launch">
+    <arg name="mapviz_mode"     default="$(arg mapviz_mode)"/>
+  </include>
+
+  <node name="mapviz_robot_image_publisher" pkg="atreus" type="mapviz_gps_fix.py"/>   
+
+</group>
+
+<group if="$(arg localization_enabled)">
+
+  <include file="$(find atreus)/launch/localization.launch"/>
+  <node name="noisy_odom_node" pkg="atreus" type="noisy_odom.py"/> 
+
+</group>
+
+<group if="$(arg mapping_enabled)">
+
+  <group if="$(eval mapping_method=='gmapping')">
+    <include file="$(find atreus)/launch/gmapping.launch"/>  
+  </group>
+
+  <group if="$(eval mapping_method=='rtabmap')">
+    <include file="$(find atreus)/launch/rtabmap.launch"/>
+  </group>
+    
+</group>
+
+<group if="$(arg move_base_enabled)">
+
+  <include file="$(find atreus)/launch/move_base.launch"/>
+
+</group>
+
+
+<group if="$(eval arg ('is_world_in_atreus') and world=='ar.world')">
+
+  <include file="$(find atreus)/launch/ar_front.launch"/>
+  <include file="$(find atreus)/launch/ar_right.launch"/>
+
+</group>
+
+<!-- Overwriting world with a custom gzsatellite world -->
+<!-- Cant define arguments within group tag, hence isolated -->
+<arg name="world_name" value="satellite.world"  if="$(eval arg ('is_world_in_atreus') and arg ('gzsatellite_enabled'))"/>
+<arg name="world_name" value="$(arg world)"     if="$(eval arg ('is_world_in_atreus') and not arg ('gzsatellite_enabled'))"/>
+
+
+
+<!-- ............................. GZSATELLITE PLUGIN ................................ --> 
+  
+<group if="$(arg gzsatellite_enabled)" ns="/gzsatellite">
+
+  <rosparam command="load"  file="$(find atreus)/config/gzsatellite/gzsatellite_params.yaml" />
+
+  <param name="tileserver"  type="string" value="http://mt1.google.com/vt/lyrs=s&amp;x={x}&amp;y={y}&amp;z={z}" />
+  <param name="latitude"    type="double" value="$(arg latitude)" />
+  <param name="longitude"   type="double" value="$(arg longitude)" />
+
+</group>
+
+
+<!-- ............................... LAUNCH WORLD ................................... -->
+
+<include file="$(find gazebo_ros)/launch/empty_world.launch">
+  <arg name="world_name"    value="$(find atreus)/worlds/$(arg world_name)" if="$(arg is_world_in_atreus)"/>
+  <arg name="world_name"    value="$(arg world)"                            unless="$(arg is_world_in_atreus)"/>
+  <arg name="paused"        value="false"/>
+  <arg name="use_sim_time"  value="true"/>
+  <arg name="gui"           value="true"/>
+  <arg name="headless"      value="true"/>
+  <arg name="debug"         value="false"/>
+</include>
+
+
+<!-- ................................ XACRO CALL .................................... -->
+
+<param name="robot_description" command="$(find xacro)/xacro $(find atreus)/urdf/atreus.xacro
+
+    latitude:=$(arg latitude)
+    longitude:=$(arg longitude)
+    front_camera_enabled:=$(arg front_camera_enabled)
+    front_camera_type:=$(arg front_camera_type)
+    side_camera_enabled:=$(arg side_camera_enabled)
+    ultrasonic_enabled:=$(arg ultrasonic_enabled)
+    two_d_lidar_enabled:=$(arg two_d_lidar_enabled)
+    obstacle_feasibility_mode_enabled:=$(arg obstacle_feasibility_mode_enabled)
+
+    " />
+
+<!-- ........................... STATIC SENSOR TRANSFORMS ........................... -->
+
+<!-- Good practice to use tf2_ros as it doesnt involve time, and prevents errors in ekf -->
+
+<node pkg="tf2_ros" type="static_transform_publisher" name="imu_transform" args="0 0 0 0 0 0 base_link imu_frame"/> 
+<node pkg="tf2_ros" type="static_transform_publisher" name="gps_transform" args="0 0 0 0 0 0 base_link gps_frame"/>
+<node pkg="tf2_ros" type="static_transform_publisher" name="mag_transform" args="0 0 0 0 0 0 base_link mag_frame"/>
+
+
+<!-- ................................ SPAWN MODEL .................................... -->
+
+
+<node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model atreus" output="screen" />
+
+<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  
+<!-- ................................................................................. -->
+
+
+</launch>
