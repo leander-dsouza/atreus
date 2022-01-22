@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="atreus">
+
+
+  
+<!--................................ XACRO CONSTANTS .............................. -->
+
+<xacro:property name="chassis_height"                       value="0.1"/>
+<xacro:property name="chassis_length"                       value="0.8"/>
+<xacro:property name="chassis_width"                        value="0.6"/>
+<xacro:property name="chassis_mass"                         value="10"/>
+
+<xacro:property name="wheel_mass"                           value="1"/>
+<xacro:property name="wheel_radius"                         value="0.1"/>
+<xacro:property name="wheel_width"                          value="0.1"/>
+<xacro:property name="wheel_pos"                            value="-0.175"/>
+<xacro:property name="wheel_torque"                         value="100"/>
+
+<xacro:arg      name="camera_enabled"                 		  default="true"/>
+<xacro:property name="camera_height"                  		  value="0.3"/>
+<xacro:property name="camera_horizontal_fov"          		  value="60"/>
+
+<xacro:arg      name="two_d_lidar_enabled"                  default="true" />
+<xacro:property name="two_d_lidar_update_rate"              value="50"/>
+<xacro:property name="two_d_lidar_sample_size"              value="151"/>
+<xacro:property name="two_d_lidar_min_angle"                value="-180"/>
+<xacro:property name="two_d_lidar_max_angle"                value="180"/>
+<xacro:property name="two_d_lidar_min_range"                value="0.1"/>
+<xacro:property name="two_d_lidar_max_range"                value="16"/>
+
+<!--................................ META CONSTANTS ................................ -->
+
+<!-- Z distance to centre of the robot -->
+<xacro:property name="chassis_ground_clearance"             value="${0.1+chassis_height/2}"/>
+<xacro:property name="wheel_base"                           value="${wheel_width+chassis_width}"/>
+
+<!-- ............................... LOAD MACROS ................................. -->
+
+<xacro:include filename="$(find atreus)/urdf/atreus.gazebo.xacro"/>
+<xacro:include filename="$(find atreus)/urdf/materials.xacro"/>
+<xacro:include filename="$(find atreus)/urdf/macros.xacro"/>
+
+<!-- ................................ BASE LINK .................................. -->
+
+
+<link name="base_link">
+
+  <collision name='collision'>
+    <origin xyz="0 0 ${chassis_ground_clearance}" rpy="0 0 0" />
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+  </collision>
+
+  <visual>
+    <origin xyz="0 0 ${chassis_ground_clearance}" rpy="0 0 0" />
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+      <material name="blue"/>
+  </visual>
+
+
+  <inertial>
+      <mass value="${chassis_mass}"/>
+      <xacro:box_inertia m="${chassis_mass}" x="${chassis_length}" y="${chassis_width}" z = "${chassis_height}"/>
+  </inertial>
+</link>
+
+<gazebo reference="base_link">
+   <material>Gazebo/Blue</material>
+</gazebo>
+
+
+<!-- ................................ WHEELS ..................................... -->
+
+<xacro:wheel cardinality="front" dexterity="left"  fb="-1"  lr ="1" />
+<xacro:wheel cardinality="front" dexterity="right" fb="-1"  lr="-1" />
+<xacro:wheel cardinality="back"  dexterity="left"  fb= "1"  lr ="1" />
+<xacro:wheel cardinality="back"  dexterity="right" fb= "1"  lr="-1" />
+
+<!-- ................................ CAMERA ..................................... -->
+
+
+<xacro:if value="$(arg camera_enabled)">
+
+  <!-- CAMERA HOLDER -->
+  <link name="camera_holder">
+
+    <!-- <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.02 0.02 ${camera_height}"/>
+        </geometry>
+    </collision> -->
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.02 0.02 ${camera_height}"/>
+        </geometry>
+        <material name="purple"/>
+    </visual>
+
+    <inertial>
+        <mass value="0.01"/>
+        <xacro:box_inertia m="0.01" x="0.02" y="0.02" z = "${camera_height}"/>
+    </inertial>
+
+  </link>
+
+  <joint name="camera_holder_joint" type="fixed">
+      <origin rpy="0 0 0" xyz="${chassis_length/4} 0 ${chassis_height/2+camera_height/2+chassis_ground_clearance}" />
+      <parent link="base_link"/>
+      <child link="camera_holder"/>
+  </joint>
+
+
+  <gazebo reference="camera_holder">
+      <material>Gazebo/Purple</material>
+  </gazebo>
+
+  <!-- CAMERA -->
+    <link name="camera_link">
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <box size="0.02 0.08 0.02"/>
+          </geometry>
+      </collision>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <box size="0.02 0.08 0.02"/>
+          </geometry>
+          <material name="black"/>
+      </visual>
+
+      <inertial>
+          <mass value="0.01"/>
+          <xacro:box_inertia m="0.01" x="0.02" y="0.08" z = "0.02"/>
+      </inertial>
+
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+      <origin rpy="0 0 0" xyz="0 0 ${camera_height/2 + 0.02/2}" />
+      <parent link="camera_holder"/>
+      <child link="camera_link"/>
+  </joint>
+
+  <gazebo reference="camera_link">
+      <material>Gazebo/Black</material>
+  </gazebo>
+
+</xacro:if>
+
+<!-- ............................. 2D LIDAR ........................................ -->
+
+<xacro:if value="$(arg two_d_lidar_enabled)">
+
+  <link name="two_d_lidar">
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <cylinder length="0.06" radius="0.075"/>
+        </geometry>
+      </collision>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <cylinder length="0.06" radius="0.075"/>
+        </geometry>
+        <material name="orange"/>
+      </visual>
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.1"/>
+        <xacro:cylinder_inertia m="0.1" r="0.075" h="0.06"/>
+      </inertial>
+  </link>
+
+  <joint name="two_d_lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="two_d_lidar"/>
+    <origin xyz="${chassis_length/2 - 0.075} 0 ${chassis_ground_clearance + chassis_height/2 + 0.06/2}" rpy="0 0 0" /> 
+  </joint>
+
+  <gazebo reference="two_d_lidar">
+      <material>Gazebo/Orange</material>
+  </gazebo>
+
+</xacro:if>
+
+
+<!-- ............................................................................. -->
+
+
+</robot>

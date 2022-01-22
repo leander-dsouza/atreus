@@ -1,0 +1,9 @@
+slam_toolbox:
+  ros__parameters:
+
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_link
+    scan_topic: /scan
+
+    max_laser_range: 16.
