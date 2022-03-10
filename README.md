@@ -26,11 +26,15 @@ Functionality
 
 * Tennis Ball Detection.
 
-* Custom Global Planner
+* Fully integrated with move_base:
+
+    <img src="https://user-images.githubusercontent.com/45683974/157730479-41d8ed3b-a4d7-41ea-9225-6559e0346bec.gif" width="900" height="500">
+
+* Custom Global Planner:
 
     <img src="https://user-images.githubusercontent.com/45683974/77653435-ad81da00-6f95-11ea-88cb-1e7cbcd500f9.gif" width="900" height="500">
 
-* Traffic Light Model
+* Traffic Light Model:
 
     <img src="https://user-images.githubusercontent.com/45683974/77582804-fab66b00-6f05-11ea-915e-847d5defb0b9.gif" width="900" height="500">
 
