@@ -165,7 +165,7 @@
 						<near>0.1</near>
 						<far>100</far>
 					</clip>
-				</camera>        
+				</camera>
 				<plugin name="stereo_camera_controller" filename="libgazebo_ros_multicamera.so">
 					<robotNamespace>/</robotNamespace>
 					<cameraName>stereocamera</cameraName>
@@ -241,13 +241,13 @@
 <gazebo>
 	<plugin name="diffdrive_plugin_multiwheel" filename="libdiffdrive_plugin_multi_wheel.so">
 		<robotNamespace></robotNamespace>
-		<updateRate>100.0</updateRate> 
+		<updateRate>100.0</updateRate>
 		<leftJoints>back_left_wheel_joint front_left_wheel_joint</leftJoints>
 		<rightJoints>back_right_wheel_joint front_right_wheel_joint</rightJoints>
 		<wheelSeparation>${wheel_base}</wheelSeparation>
 		<wheelDiameter>${2*wheel_radius}</wheelDiameter>
 		<robotBaseFrame>base_footprint</robotBaseFrame>
-		<torque>${wheel_torque}</torque>        
+		<torque>${wheel_torque}</torque>
 		<commandTopic>/cmd_vel</commandTopic>
 		<odometryTopic>odom</odometryTopic>
 		<odometryFrame>odom</odometryFrame>
@@ -264,7 +264,7 @@
       <gravity>true</gravity>
       <sensor type="ray" name="two_d_lidar">
         <pose>0 0 0 0 0 0</pose>
-        <visualize>true</visualize>
+        <visualize>false</visualize>
         <update_rate>${two_d_lidar_update_rate}</update_rate>
         <ray>
           <scan>
@@ -313,7 +313,7 @@
 	  <velocityGaussianNoise>0 0 0</velocityGaussianNoise>
 	  <frameId>gps_frame</frameId>
 	  <referenceLatitude>$(arg latitude)</referenceLatitude>
-	  <referenceLongitude>$(arg longitude)</referenceLongitude> 
+	  <referenceLongitude>$(arg longitude)</referenceLongitude>
 	</plugin>
 </gazebo>
 
@@ -343,7 +343,7 @@
         <gaussianNoise>0.0</gaussianNoise>
         <frameName>imu_frame</frameName>
   	</plugin>
-  
+
   	<plugin name="magnetometer" filename="libhector_gazebo_ros_magnetic.so">
         <updateRate>50.0</updateRate>
         <bodyName>base_link</bodyName>
@@ -352,7 +352,7 @@
         <drift>0.0 0.0 0.0</drift>
         <gaussianNoise>1.3e-2 1.3e-2 1.3e-2</gaussianNoise>
         <frameId>mag_frame</frameId>
-    </plugin>   
+    </plugin>
 </gazebo>
 
 <!--................................................................................. -->

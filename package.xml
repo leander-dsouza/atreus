@@ -12,19 +12,28 @@
   <!-- Internal dependencies -->
   <depend>gazebo_ros</depend>
   <depend>roscpp</depend>
+  <depend>tf_conversions</depend>
   <depend>pcl_conversions</depend>
   <depend>hector_gazebo_plugins</depend>
   <depend>mapviz</depend>
+  <depend>xacro</depend>
+	<depend>amcl</depend>
+	<depend>map_server</depend>
+	<depend>gmapping</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>robot_state_publisher</depend>
   <depend>move_base</depend>
+	<depend>carrot_planner</depend>
   <depend>dwa_local_planner</depend>
   <depend>teb_local_planner</depend>
+	<depend>robot_localization</depend>
 
   <!-- External dependencies -->
   <depend>ar_track_alvar</depend>
   <depend>gzsatellite</depend>
   <depend>realsense_gazebo_plugin</depend>
   <depend>aws_robomaker_small_warehouse_world</depend>
-  
+
   <export>
     <gazebo_ros
       plugin_path="${prefix}/lib"

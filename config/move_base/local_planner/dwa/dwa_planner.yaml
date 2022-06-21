@@ -2,7 +2,7 @@ base_local_planner: dwa_local_planner/DWAPlannerROS
 
 DWAPlannerROS:
 
-	yaw_goal_tolerance :  0.5
-	xy_goal_tolerance :   0.5
-	max_rot_vel :         1.0
-	acc_lim_theta :       10.0
+  yaw_goal_tolerance :  0.5
+  xy_goal_tolerance :   0.5
+  max_rot_vel :         1.0
+  acc_lim_theta :       10.0

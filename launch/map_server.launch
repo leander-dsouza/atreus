@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-  <!-- CONFIGURABLE ARGUMENTS --> 
-  <arg name="map_yaml_file_path" default="$(find atreus)/config/mapping/maps/warehouse_map/warehouse_map.yaml"/>
-
+  <!-- CONFIGURABLE ARGUMENTS -->
+	<arg name="map_name" default="warehouse"/>
 
   <!-- Launch the map server -->
-  <node name="loc_map_server" pkg="map_server" type="map_server" args="$(arg map_yaml_file_path)" output="screen">
-      <remap from="map" to="/warehouse"/>
+  <node name="loc_map_server" pkg="map_server" type="map_server"
+			args="$(find atreus)/config/mapping/maps/$(arg map_name)_map/$(arg map_name)_map.yaml" output="screen">
+
+      <remap from="map" to="/$(arg map_name)"/>
+
   </node>
 
 

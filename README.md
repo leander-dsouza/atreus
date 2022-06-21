@@ -9,7 +9,7 @@
 
 This package contains a mutlipurpose four-wheeled skid-steer drive robot equipped with sensors such as IntelRealSense D435 Depth Camera, LiDAR, Ultrasonics, GPS, IMU, Magnetometer and a pair of cameras.
 
-Functionality 
+Functionality
 ------------
 
 * Obstacle Avoidance with soft turning using pcl processing (passthrough + voxel + RANSAC + euclidean clustering + centroidal analysis).
@@ -38,7 +38,7 @@ Functionality
 
     <img src="https://user-images.githubusercontent.com/45683974/77582804-fab66b00-6f05-11ea-915e-847d5defb0b9.gif" width="900" height="500">
 
-Dependencies 
+Dependencies
 ------------
 
 * [**ar_track_alvar**](https://github.com/mojin-robotics/ar_track_alvar)
@@ -46,60 +46,63 @@ Dependencies
 * [**gzsatellite**](https://github.com/plusk01/gzsatellite)
 * [**aws_robomaker_small_warehouse_world**](https://github.com/aws-robotics/aws-robomaker-small-warehouse-world)
 
+* You can use the helper script to download all these repositories to the directory above the current path:
 
-Installation 
+	  ./clone_repos.sh
+
+Installation
 ------------
 
 * Install all the required ROS related dependencies:
 
-      rosdep install --from-paths src --ignore-src -r -y 
+	  rosdep install --from-paths src --ignore-src -r -y
 
 * To install all python related dependencies:
 
 	  pip install -r requirements.txt
-        
+
 * To install all Mapviz related dependencies:
 
-      ./mapviz_install.sh 
-    
+	  ./mapviz_install.sh
+
 * For basic bot simulation:
 
-      roslaunch atreus xacro.launch
+	  roslaunch atreus xacro.launch
 
 ### Optional
 
 * To add an additional python dependency to the list, modify `requirements.in` and add a trailing library to the file. After which you need to install the following dependencies in order to use `pip-compile`:
 
-		pip install pip-tools launchpadlib
+	  pip install pip-tools launchpadlib
 
 * Finally use `pip-compile` to generate a `requirements.txt` file from `requirements.in`:
 
-		pip-compile requirements.in
+	  pip-compile requirements.in
 
 
 Errors
 ------------
-*  Run the following command if the traffic light does not glow red: 
+*  Run the following command if the traffic light does not glow red:
 
-       ./traffic_light_dep_fix.sh 
+	   ./traffic_light_dep_fix.sh
 
 * Run the following commands if the map cache in mapviz does not appear.<br/>Based on the errors displayed, correspondingly run the commands and then launch mapviz:
 
 1) **ERROR: 1** or **ERROR: 203**
 
-       sudo docker run -p 8080:8080 -d -t -v ~/mapproxy:/mapproxy danielsnider/mapproxy
+	   sudo docker run -p 8080:8080 -d -t -v ~/mapproxy:/mapproxy danielsnider/mapproxy
 
 2) **ERROR: 2** or **ERROR: 401**
 
-       sudo docker container ls
-  
-       sudo docker stop {container id}
+	   sudo docker container ls
 
-       sudo docker run -p 8080:8080 -d -t -v ~/mapproxy:/mapproxy danielsnider/mapproxy
+	   sudo docker stop {container id}
+
+	   sudo docker run -p 8080:8080 -d -t -v ~/mapproxy:/mapproxy danielsnider/mapproxy
 
 3) **ERROR: 302**
 
-       Configured correctly. Poor internet connection.
+	   Configured correctly. Poor internet connection.
 
 
 ###### 💾 EOF

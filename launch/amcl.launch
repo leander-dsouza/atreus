@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
+  <!-- CONFIGURABLE ARGUMENTS -->
+	<arg name="map_name" default="warehouse"/>
 
   <node pkg="amcl" type="amcl" name="amcl" output="screen">
-    
+
     <param name="base_frame_id" value="base_footprint"/>
     <remap from="scan" to="/scan" />
-    <remap from="map" to="/warehouse" />
-    
+    <remap from="map" to="/$(arg map_name)"/>
+
   </node>
 
 </launch>

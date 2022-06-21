@@ -4,13 +4,13 @@
 
   <!-- CONFIGURABLE ARGUMENTS -->
 
-  <arg name="global_planner"    default="carrot"    doc="Global planner can be either navfn or carrot" /> 
+  <arg name="global_planner"    default="navfn"    doc="Global planner can be either navfn or carrot" />
   <arg name="local_planner"     default="teb"       doc="Local planner can be either dwa, base or teb"/>"/>
 
 
 
   <!-- MAP SERVER -->
-  <include file="$(find atreus)/launch/map_server.launch"/>  
+  <include file="$(find atreus)/launch/map_server.launch"/>
 
   <!-- AMCL -->
   <include file="$(find atreus)/launch/amcl.launch"/>
