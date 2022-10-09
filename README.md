@@ -11,9 +11,13 @@ This package contains a mutlipurpose four-wheeled skid-steer drive robot equippe
 Installation
 ------------
 
+* In the docker only, disable online loading of gazebo models:
+
+	  ./pause_gazebo_models.sh
+
 * Install all the required ROS related dependencies:
 
-      rosdep install --from-paths src --ignore-src -r -y
+	  rosdep install --from-paths src --ignore-src -r -y
 
 * To install all python related dependencies:
 
@@ -21,16 +25,16 @@ Installation
 
 * For basic bot simulation:
 
-      ros2 launch atreus main.launch.py
+	  ros2 launch atreus main.launch.py
 
 ### Optional
 
 * To add an additional python dependency to the list, modify `requirements.in` and add a trailing library to the file. After which you need to install the following dependencies in order to use `pip-compile`:
 
-		pip install pip-tools launchpadlib
+	  pip install pip-tools launchpadlib
 
 * Finally use `pip-compile` to generate a `requirements.txt` file from `requirements.in`:
 
-		pip-compile requirements.in
+	  pip-compile requirements.in
 
 ###### 💾 EOF
