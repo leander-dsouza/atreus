@@ -5,10 +5,19 @@ Teleoperation using arrow keys for ROS2
 
 import rclpy
 from rclpy.node import Node
-from py_trees_ros.utilities import qos_profile_unlatched
+from rclpy.qos import QoSProfile, \
+	QoSHistoryPolicy, QoSReliabilityPolicy, QoSDurabilityPolicy
 from geometry_msgs.msg import Twist
 from pynput import keyboard
 from pynput.keyboard import Key
+
+
+qos_profile_unlatched = QoSProfile(
+	depth = 1,
+	history = QoSHistoryPolicy.KEEP_LAST,
+	reliability = QoSReliabilityPolicy.RELIABLE,
+	durability = QoSDurabilityPolicy.VOLATILE
+)
 
 
 class KeyDrive(Node):
@@ -27,7 +36,7 @@ class KeyDrive(Node):
 
         # Publishers
         self.pub = self.create_publisher(Twist, "/cmd_vel", \
-            qos_profile_unlatched())
+            qos_profile_unlatched)
 
         # Timers
         self.create_timer(self.time_period, self.keyboard_update)
@@ -85,7 +94,7 @@ class KeyDrive(Node):
             self.left()
         return False
 
-    def key_release(self, key):
+    def key_release(self, _):
         """
         Listen for key release
         """
