@@ -24,8 +24,7 @@ def generate_launch_description():
     # ...............................................................
 
     pkg_dir = get_package_share_directory('atreus')
-    controller_server_params = '%s_controller_server_params.yaml' \
-        % local_planner_method
+    controller_server_params = f'{local_planner_method}_controller_server_params.yaml'
 
 
     return LaunchDescription([

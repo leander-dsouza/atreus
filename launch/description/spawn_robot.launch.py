@@ -33,11 +33,11 @@ def generate_launch_description():
 
     pkg_dir = get_package_share_directory('atreus')
 
-    os.environ["GAZEBO_MODEL_PATH"] = \
-        os.path.join(pkg_dir, 'models')   # Add to model directory
-
     # os.environ["GAZEBO_MODEL_PATH"] = \
-    #     os.path.join(pkg_dir, 'models', 'warehouse_models')  # Use this in warehouse world
+    #     os.path.join(pkg_dir, 'models')   # Add to model directory
+
+    os.environ["GAZEBO_MODEL_PATH"] = \
+        os.path.join(pkg_dir, 'models', 'warehouse_models')  # Use this in warehouse world
 
 
     return LaunchDescription([

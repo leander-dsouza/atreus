@@ -63,7 +63,7 @@ def generate_launch_description():
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource( \
-                [ThisLaunchFileDir(), '/recoveries_server.launch.py']),
+                [ThisLaunchFileDir(), '/behavior_server.launch.py']),
             launch_arguments={
                 'use_sim_time': LaunchConfiguration('use_sim_time')
                 }.items(),
@@ -80,6 +80,14 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource( \
                 [ThisLaunchFileDir(), '/waypoint_follower.launch.py']),
+            launch_arguments={
+                'use_sim_time': LaunchConfiguration('use_sim_time')
+                }.items(),
+        ),
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource( \
+                [ThisLaunchFileDir(), '/velocity_smoother.launch.py']),
             launch_arguments={
                 'use_sim_time': LaunchConfiguration('use_sim_time')
                 }.items(),

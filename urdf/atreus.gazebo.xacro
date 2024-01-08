@@ -20,7 +20,7 @@
 
     <!-- Number of wheel pairs -->
     <num_wheel_pairs>2</num_wheel_pairs>
-    
+
     <!-- back wheels -->
     <left_joint>back_left_wheel_joint</left_joint>
     <right_joint>back_right_wheel_joint</right_joint>
@@ -147,7 +147,7 @@
   <gazebo reference="camera_link">
 
     <sensor type="camera" name="camera">
-      
+
       <!-- Set always_on only sensor, not on plugin -->
       <always_on>0</always_on>
 
@@ -171,7 +171,7 @@
             <mean>0.0</mean>
             <stddev>0.007</stddev>
           </noise>
-        
+
         <distortion>
           <k1>0.0</k1>
           <k2>0.0</k2>
@@ -186,11 +186,11 @@
       <!-- Use camera, not camera_triggered -->
       <plugin name="plugin_name" filename="libgazebo_ros_camera.so">
         <!-- DON'T USE COLON-->
-        
+
         <!-- Change namespace, camera name and topics so -
               * Images are published to- /custom_ns/custom_camera/custom_image
               * Camera info is published to- /custom_ns/custom_camera/custom_info  -->
-       
+
         <ros>
           <namespace></namespace>
           <remapping>image_raw:=image_raw</remapping>

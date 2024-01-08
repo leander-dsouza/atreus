@@ -16,6 +16,10 @@
 	<exec_depend>gazebo_plugins</exec_depend>
 	<exec_depend>slam_toolbox</exec_depend>
 	<exec_depend>nav2_lifecycle_manager</exec_depend>
+	<exec_depend>nav2_amcl</exec_depend>
+	<exec_depend>nav2_controller</exec_depend>
+	<exec_depend>nav2_planner</exec_depend>
+	<exec_depend>navigation2</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 """
-Bringup the Global Planner and Costmap in the Nav_Stack
+Bringup Velocity Smoother in the Nav_Stack
 """
 import os
 from ament_index_python.packages import get_package_share_directory
@@ -19,13 +19,11 @@ def generate_launch_description():
     # .................. Configurable Arguments .....................
 
     use_sim_time = True
-    global_planner_method = 'navfn'
+    velocity_smoother_params = 'velocity_smoother_params.yaml'
+
     # ...............................................................
 
     pkg_dir = get_package_share_directory('atreus')
-
-    planner_server_params = \
-        f'{global_planner_method}_planner_server_params.yaml'
 
 
     return LaunchDescription([
@@ -34,36 +32,31 @@ def generate_launch_description():
             default_value=str(use_sim_time), \
                 description="Use simulation/Gazebo clock"),
 
-        DeclareLaunchArgument("planner_server_params_file", \
-            default_value=planner_server_params, \
-                description="Planner Server Params"),
-
-        DeclareLaunchArgument("global_planner_method", \
-            default_value=global_planner_method, \
-                description="Global Planning Method"),
+        DeclareLaunchArgument("velocity_smoother_params_file", \
+            default_value=velocity_smoother_params, \
+                description="Velocity Smoother Params"),
 
         Node(
-            package='nav2_planner',
-            executable='planner_server',
-            name='planner_server',
+            package='nav2_velocity_smoother',
+            executable='velocity_smoother',
+            name='velocity_smoother',
             output='screen',
             parameters=[
                 {'use_sim_time': \
                     LaunchConfiguration('use_sim_time')},
 
-                [os.path.join(pkg_dir, 'config', 'navigation', \
-                    'planner_server', '{}/'.format(global_planner_method)), \
-                        LaunchConfiguration("planner_server_params_file")]],
+                [os.path.join(pkg_dir, 'config', 'navigation', 'velocity_smoother/'), \
+                    LaunchConfiguration("velocity_smoother_params_file")]]
         ),
 
         Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',
-            name='lifecycle_manager_planner_server',
+            name='lifecycle_manager_velocity_smoother',
             output='screen',
             parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')},
                         {'autostart': True},
-                        {'node_names': ['planner_server']}]
+                        {'node_names': ['velocity_smoother']}]
         )
 
     ])

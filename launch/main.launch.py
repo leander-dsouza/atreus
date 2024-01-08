@@ -18,14 +18,14 @@ def generate_launch_description():
 
     use_sim_time = True
 
-    world_name = 'empty.world'
+    world_name = 'mapping.world'
     camera_enabled = False
-    two_d_lidar_enabled = False
-    rviz_enabled = False
-    rviz_config = 'urdf.rviz'
+    two_d_lidar_enabled = True
+    rviz_enabled = True
+    rviz_config = 'navigation.rviz'
 
     mapping_method = ''
-    navigation_enabled = False
+    navigation_enabled = True
 
     # ...............................................................
 

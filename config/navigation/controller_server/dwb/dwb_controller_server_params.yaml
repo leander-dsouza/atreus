@@ -79,11 +79,10 @@ local_costmap:
       global_frame: odom
       robot_base_frame: base_link
 
-      # robot_radius: 0.5
+      robot_radius: 0.5
 
-      # Blackbot footprint
-      footprint: "[[0.25, 0.12], [0.25, -0.12], [-0.10, -0.12], [-0.10, 0.12]]"
-      footprint_padding: 0.01
+      # footprint: "[[0.25, 0.12], [0.25, -0.12], [-0.10, -0.12], [-0.10, 0.12]]"
+      # footprint_padding: 0.01
 
       rolling_window: true
       width: 5
@@ -137,9 +136,5 @@ local_costmap:
       always_send_full_costmap: True
 
   local_costmap_client:
-    ros__parameters:
-      use_sim_time: True
-
-  local_costmap_rclcpp_node:
     ros__parameters:
       use_sim_time: True

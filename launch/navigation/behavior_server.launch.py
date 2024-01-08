@@ -19,7 +19,7 @@ def generate_launch_description():
     # .................. Configurable Arguments .....................
 
     use_sim_time = True
-    recoveries_server_params = 'recoveries_server_params.yaml'
+    behavior_server_params = 'behavior_server_params.yaml'
 
     # ...............................................................
 
@@ -32,21 +32,21 @@ def generate_launch_description():
             default_value=str(use_sim_time), \
                 description="Use simulation/Gazebo clock"),
 
-        DeclareLaunchArgument("recoveries_server_params_file", \
-            default_value=recoveries_server_params, \
+        DeclareLaunchArgument("behavior_server_params_file", \
+            default_value=behavior_server_params, \
                 description="Recovery Params"),
 
         Node(
-            package='nav2_recoveries',
-            executable='recoveries_server',
-            name='recoveries_server',
+            package='nav2_behaviors',
+            executable='behavior_server',
+            name='behavior_server',
             output='screen',
             parameters=[
                 {'use_sim_time': \
                     LaunchConfiguration('use_sim_time')},
 
-                [os.path.join(pkg_dir, 'config', 'navigation', 'recoveries_server/'), \
-                    LaunchConfiguration("recoveries_server_params_file")]]
+                [os.path.join(pkg_dir, 'config', 'navigation', 'behavior_server/'), \
+                    LaunchConfiguration("behavior_server_params_file")]]
         ),
 
         Node(
@@ -56,7 +56,7 @@ def generate_launch_description():
             output='screen',
             parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')},
                         {'autostart': True},
-                        {'node_names': ['recoveries_server']}]
+                        {'node_names': ['behavior_server']}]
         )
 
     ])
