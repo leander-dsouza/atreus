@@ -32,7 +32,7 @@
 <arg name="mapping_enabled"                     default="false"/>
 <arg name="mapping_method"                      default="gmapping"/>
 
-<arg name="localization_enabled"                default="true"/>
+<arg name="localization_enabled"                default="false"/>
 <arg name="gzsatellite_enabled"                 default="false"/>
 <arg name="move_base_enabled"                   default="false"/>
 
