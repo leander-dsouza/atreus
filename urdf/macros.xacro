@@ -54,7 +54,7 @@
    <joint name="${cardinality}_${dexterity}_wheel_joint" type="continuous">
       <parent link="base_link"/>
       <child link="${cardinality}_${dexterity}_wheel"/>
-      <origin xyz="${fb*(wheel_pos-chassis_length/4+wheel_radius)} ${lr*(wheel_width/2+chassis_width/2)} ${wheel_radius}" rpy="0 0 0" /> 
+      <origin xyz="${fb*(wheel_base)} ${lr*(wheel_separation/2)} ${wheel_radius}" rpy="0 0 0" />
       <axis xyz="0 1 0" rpy="0 0 0" />
     </joint>
 

@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="atreus">
 
 
-  
+
 <!--................................ XACRO CONSTANTS .............................. -->
 
 <xacro:property name="chassis_height"                       value="0.1"/>
@@ -32,7 +32,8 @@
 
 <!-- Z distance to centre of the robot -->
 <xacro:property name="chassis_ground_clearance"             value="${0.1+chassis_height/2}"/>
-<xacro:property name="wheel_base"                           value="${wheel_width+chassis_width}"/>
+<xacro:property name="wheel_base"                           value="${wheel_pos-chassis_length/4+wheel_radius}"/>
+<xacro:property name="wheel_separation"                     value="${wheel_width+chassis_width}"/>
 
 <!-- ............................... LOAD MACROS ................................. -->
 
@@ -120,7 +121,7 @@
       <material>Gazebo/Purple</material>
   </gazebo>
 
-  <!-- CAMERA -->
+  <!-- 3D CAMERA -->
     <link name="camera_link">
 
       <collision>
@@ -187,7 +188,7 @@
   <joint name="two_d_lidar_joint" type="fixed">
     <parent link="base_link"/>
     <child link="two_d_lidar"/>
-    <origin xyz="${chassis_length/2 - 0.075} 0 ${chassis_ground_clearance + chassis_height/2 + 0.06/2}" rpy="0 0 0" /> 
+    <origin xyz="${chassis_length/2 - 0.075} 0 ${chassis_ground_clearance + chassis_height/2 + 0.06/2}" rpy="0 0 0" />
   </joint>
 
   <gazebo reference="two_d_lidar">

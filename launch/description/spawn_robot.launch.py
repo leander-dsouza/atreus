@@ -6,8 +6,8 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, ThisLaunchFileDir, Command
-from launch.actions import ExecuteProcess, DeclareLaunchArgument, IncludeLaunchDescription
+from launch.substitutions import LaunchConfiguration, Command, PythonExpression
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, AppendEnvironmentVariable
 from launch.conditions import IfCondition
 from launch_ros.actions import Node
 
@@ -23,24 +23,93 @@ def generate_launch_description():
     gui = False
 
     world_name = 'empty.world'
-    camera_enabled = False
-    two_d_lidar_enabled = False
-    rviz_enabled = False
+    camera_enabled = True
+    two_d_lidar_enabled = True
+    rviz_enabled = True
     rviz_config = 'urdf.rviz'
 
     # ...............................................................
 
 
     pkg_dir = get_package_share_directory('atreus')
+    gz_sim_pkg = get_package_share_directory('ros_gz_sim')
 
-    # os.environ["GAZEBO_MODEL_PATH"] = \
-    #     os.path.join(pkg_dir, 'models')   # Add to model directory
+    gz_spawn_entity_node = Node(
+        package="ros_gz_sim",
+        executable="create",
+        arguments=[
+            "-topic", "/robot_description",
+            "-name", "atreus",
+            "-x", "0",
+            "-y", "0",
+            "-z", "0.5",
+        ]
+    )
 
-    os.environ["GAZEBO_MODEL_PATH"] = \
-        os.path.join(pkg_dir, 'models', 'warehouse_models')  # Use this in warehouse world
+    gz_ros2_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
+            "/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
+            "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
+            "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
+            "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
+            "/imu@sensor_msgs/msg/Imu[gz.msgs.IMU",
+            "/world/default/model/atreus/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model"
+        ],
+        remappings=[
+            ('/cmd_vel', '/cmd_vel'),
+            ('/odom', '/odom'),
+            ('/tf', '/tf'),
+            ('/scan', '/scan'),
+            ('/camera/camera_info', '/camera/camera_info'),
+            ('/camera/points', '/camera/points'),
+            ('/imu', '/imu'),
+            ('/world/default/model/atreus/joint_state', '/joint_states')
+        ]
+    )
 
+
+    robot_state_publisher_node = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        parameters=[{'robot_description': Command( \
+            ['xacro ', os.path.join(pkg_dir, 'urdf/atreus.xacro'),
+            ' camera_enabled:=',      LaunchConfiguration('camera_enabled'),
+            ' two_d_lidar_enabled:=', LaunchConfiguration('two_d_lidar_enabled'),
+            ])}]
+    )
+
+    gz_sim_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(gz_sim_pkg, "launch", "gz_sim.launch.py")),
+        launch_arguments={
+            "gz_args" : PythonExpression(
+                ["'", os.path.join(pkg_dir, 'worlds', world_name), " -r'"])
+        }.items()
+    )
+
+    rviz_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_dir, "launch", "description", "rviz.launch.py")),
+        launch_arguments={
+            'gazebo_enabled': 'True',
+            'rviz_config': LaunchConfiguration('rviz_config')
+            }.items(),
+        condition=IfCondition(LaunchConfiguration('rviz_enabled'))
+    )
 
     return LaunchDescription([
+
+        AppendEnvironmentVariable(
+            name='GZ_SIM_RESOURCE_PATH',
+                value=os.path.join(pkg_dir, "worlds")),
+
+        AppendEnvironmentVariable(
+            name='GZ_SIM_RESOURCE_PATH',
+                value=os.path.join(pkg_dir, "models")),
 
         DeclareLaunchArgument('gui', \
             default_value=str(gui), \
@@ -70,60 +139,11 @@ def generate_launch_description():
             default_value=rviz_config, \
                 description="RViz Config"),
 
-        ExecuteProcess(
-            cmd=['gazebo', '--verbose', \
-                [os.path.join(pkg_dir, 'worlds/'), \
-                    LaunchConfiguration("world_name")],
-            '-s', 'libgazebo_ros_init.so',
-            '-s', 'libgazebo_ros_factory.so'],
-            output='screen'),
+        robot_state_publisher_node,
+        gz_ros2_bridge,
+        gz_spawn_entity_node,
 
-        Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            parameters=[{'robot_description': Command( \
-                ['xacro ', os.path.join(pkg_dir, 'urdf/atreus.xacro'),
-                ' camera_enabled:=',      LaunchConfiguration('camera_enabled'),
-                ' two_d_lidar_enabled:=', LaunchConfiguration('two_d_lidar_enabled'),
-                ])}]
-        ),
-
-        # Node(
-        #     package='joint_state_publisher_gui',
-        #     executable='joint_state_publisher_gui',
-        #     name='joint_state_publisher_gui',
-        #     condition=IfCondition(LaunchConfiguration('gui'))
-        # ),
-
-
-        # Node(
-        #     package='joint_state_publisher',
-        #     executable='joint_state_publisher',
-        #     name='joint_state_publisher',
-        #     condition=UnlessCondition(LaunchConfiguration('gui'))
-        # ),
-
-        Node(
-            package='gazebo_ros', executable='spawn_entity.py',
-            arguments=['-topic', 'robot_description',
-                       '-entity', 'atreus',
-                       '-x', '0',
-                       '-y', '0',
-                       '-z', '0.5'
-                      ],
-            output='screen'
-        ),
-
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource( \
-                [ThisLaunchFileDir(), '/rviz.launch.py']),
-            launch_arguments={
-                'gazebo_enabled': 'True',
-                'rviz_config': LaunchConfiguration('rviz_config')
-                }.items(),
-            condition=IfCondition(LaunchConfiguration('rviz_enabled'))
-        ),
-
-        # print(ThisLaunchFileDir())
+        gz_sim_launch,
+        rviz_launch,
 
     ])
