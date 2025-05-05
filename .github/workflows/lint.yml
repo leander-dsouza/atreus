@@ -1,0 +1,22 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Set up Python environment
+        uses: actions/setup-python@v5.5.0
+        with:
+          python-version: '3.12'
+
+      - name: Run pre-commit hooks
+        uses: pre-commit/action@v3.0.1

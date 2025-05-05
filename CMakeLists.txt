@@ -23,7 +23,7 @@ find_package(ament_cmake REQUIRED)
 
 # .............. Added Block of Code ..................
 
-install(DIRECTORY config launch models urdf worlds 
+install(DIRECTORY config launch models urdf worlds
   DESTINATION share/${PROJECT_NAME})
 
 install(PROGRAMS scripts/key_drive.py
