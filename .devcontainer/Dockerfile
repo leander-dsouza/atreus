@@ -19,6 +19,11 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 RUN apt-get update && apt-get upgrade -y
 
+# Install memory heavy packages
+RUN apt-get install -y \
+    ros-$ROS_DISTRO-rviz2 \
+    ros-$ROS_DISTRO-ros-gz
+
 # Install essential packages
 RUN apt-get install -y \
     python3-pip \
