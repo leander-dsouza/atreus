@@ -35,6 +35,12 @@ RUN apt-get install -y \
 RUN rm -rf /etc/apt/apt.conf.d/docker-clean && \
     apt-get update -y
 
+# Set XDG_RUNTIME_DIR for RViz
+RUN mkdir -p /tmp/runtime-$USERNAME \
+    && chown $USERNAME:$USERNAME /tmp/runtime-$USERNAME \
+    && chmod 0700 /tmp/runtime-$USERNAME
+ENV XDG_RUNTIME_DIR=/tmp/runtime-$USERNAME
+
 ENV SHELL /bin/bash
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.
