@@ -1,0 +1,24 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/opt/ros/jazzy/lib/python3.12/site-packages"
+    ],
+    "files.trimTrailingWhitespace": true,
+
+    "[python]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+      },
+
+      "[cpp]": {
+          "editor.insertSpaces": true,
+          "editor.tabSize": 2,
+      },
+
+      "[xml]": {
+          "editor.insertSpaces": true,
+          "editor.tabSize": 2,
+      },
+}
