@@ -1,0 +1,44 @@
+{
+    "name": "ROS 2 devcontainer",
+    "privileged": true,
+    "remoteUser": "${localEnv:USER}",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "ROS_DISTRO": "jazzy",
+            "USERNAME": "${localEnv:USER}"
+        }
+    },
+    "workspaceFolder": "/home/${localEnv:USER}/ws/src/atreus",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/${localEnv:USER}/ws/src/atreus,type=bind",
+    "customizations": {
+        "vscode": {
+            "extensions":[
+                "ms-vscode.cpptools",
+                "ms-vscode.cpptools-themes",
+                "twxs.cmake",
+                "donjayamanne.python-extension-pack",
+                "eamodio.gitlens",
+                "ms-iot.vscode-ros",
+                "GitHub.copilot"
+            ]
+        }
+    },
+    "containerEnv": {
+        "DISPLAY": "unix:0",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+        "ROS_DOMAIN_ID": "42"
+    },
+    "runArgs": [
+        "--net=host",
+        "--pid=host",
+        "--ipc=host",
+        "-e", "DISPLAY=${env:DISPLAY}"
+    ],
+    "mounts": [
+       "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
+       "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached"
+    ],
+    "onCreateCommand": ".devcontainer/on-create-command.sh",
+    "postCreateCommand": ".devcontainer/post-create-command.sh"
+}
