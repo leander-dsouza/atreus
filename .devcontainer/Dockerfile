@@ -19,6 +19,11 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 RUN apt-get update && apt-get upgrade -y
 
+# Install memory heavy packages
+RUN apt-get install -y \
+    ros-$ROS_DISTRO-rviz2 \
+    ros-$ROS_DISTRO-ros-gz
+
 # Install essential packages
 RUN apt-get install -y \
     python3-pip \
@@ -29,6 +34,12 @@ RUN apt-get install -y \
 # Remove docker-cache to enable apt-get install
 RUN rm -rf /etc/apt/apt.conf.d/docker-clean && \
     apt-get update -y
+
+# Set XDG_RUNTIME_DIR for RViz
+RUN mkdir -p /tmp/runtime-$USERNAME \
+    && chown $USERNAME:$USERNAME /tmp/runtime-$USERNAME \
+    && chmod 0700 /tmp/runtime-$USERNAME
+ENV XDG_RUNTIME_DIR=/tmp/runtime-$USERNAME
 
 ENV SHELL /bin/bash
 
