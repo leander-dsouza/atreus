@@ -22,10 +22,10 @@ def generate_launch_description():
     use_sim_time = True
     gui = False
 
-    world_name = 'empty.world'
+    world_name = 'mapping.world'
     camera_enabled = True
     two_d_lidar_enabled = True
-    rviz_enabled = True
+    rviz_enabled = False
     rviz_config = 'urdf.rviz'
 
     # ...............................................................
@@ -109,7 +109,7 @@ def generate_launch_description():
 
         AppendEnvironmentVariable(
             name='GZ_SIM_RESOURCE_PATH',
-                value=os.path.join(pkg_dir, "models")),
+                value=os.path.join(pkg_dir, "models", "warehouse_models")),
 
         DeclareLaunchArgument('gui', \
             default_value=str(gui), \
