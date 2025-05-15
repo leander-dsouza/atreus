@@ -6,6 +6,9 @@ set -eo pipefail
 sudo chown -R $(whoami) ~/ws
 cd ~/ws
 
+# Import custom repositories
+vcs import src < ~/ws/src/atreus/custom_deps.repos
+
 # Run rosdep installation
 rosdep update
 rosdep install --from-paths src --ignore-src -y

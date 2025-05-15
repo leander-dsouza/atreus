@@ -1,0 +1,5 @@
+repositories:
+  key_teleop_ros:
+    type: git
+    url: https://github.com/leander-dsouza/key_teleop_ros.git
+    version: ros2

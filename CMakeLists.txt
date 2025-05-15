@@ -26,9 +26,6 @@ find_package(ament_cmake REQUIRED)
 install(DIRECTORY config launch models urdf worlds
   DESTINATION share/${PROJECT_NAME})
 
-install(PROGRAMS scripts/key_drive.py
-  DESTINATION lib/${PROJECT_NAME})
-
 #......................................................
 
 if(BUILD_TESTING)
