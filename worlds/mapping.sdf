@@ -1,0 +1,479 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.6">
+  <world name="default">
+
+  <gravity>0 0 -9.8</gravity>
+
+  <physics default="0" name="default_physics" type="ode">
+    <max_step_size>0.001</max_step_size>
+    <real_time_factor>1</real_time_factor>
+    <real_time_update_rate>1000</real_time_update_rate>
+  </physics>
+
+  <light name="Warehouse_CeilingLight_003" type="point">
+    <pose frame="">0 0 9 0 0 0</pose>
+    <diffuse>0.5 0.5 0.5 1</diffuse>
+    <specular>0.2 0.2 0.2 1</specular>
+    <attenuation>
+      <range>80</range>
+      <constant>0.3</constant>
+      <linear>0.01</linear>
+      <quadratic>0.001</quadratic>
+    </attenuation>
+    <cast_shadows>1</cast_shadows>
+    <direction>0.1 0.1 -1</direction>
+  </light>
+
+  <!-- <model name="aws_robomaker_warehouse_Lamp_01_005">
+    <include>
+        <uri>model://aws_robomaker_warehouse_Lamp_01</uri>
+    </include>
+    <pose frame="">0 0 -4 0 0 0</pose>
+	</model> -->
+
+  <!-- <model name="aws_robomaker_warehouse_RoofB_01_001">
+    <include>
+      <uri>model://aws_robomaker_warehouse_RoofB_01</uri>
+    </include>
+    <pose frame="">0.0 0.0 0 0 0 0</pose>
+  </model> -->
+
+  <model name="aws_robomaker_warehouse_ShelfF_01_001">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ShelfF_01</uri>
+    </include>
+    <pose frame="">-5.795143 -0.956635 0 0 0 0</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_WallB_01_001">
+    <include>
+        <uri>model://aws_robomaker_warehouse_WallB_01</uri>
+    </include>
+    <pose frame="">0.0 0.0 0 0 0 0</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_ShelfE_01_001">
+    <include>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+    </include>
+    <pose frame="">4.73156 0.57943 0 0 0 0</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_ShelfE_01_002">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+    </include>
+    <pose frame="">4.73156 -4.827049 0 0 0 0</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_ShelfE_01_003">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+    </include>
+    <pose frame="">4.73156 -8.6651 0 0 0 0</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_ShelfD_01_001">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ShelfD_01</uri>
+    </include>
+    <pose frame="">4.73156 -1.242668 0 0 0 0</pose>
+  </model>
+
+  <model name="aws_robomaker_warehouse_ShelfD_01_002">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ShelfD_01</uri>
+    </include>
+    <pose frame="">4.73156 -3.038551 0 0 0 0</pose>
+  </model>
+
+  <model name="aws_robomaker_warehouse_ShelfD_01_003">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ShelfD_01</uri>
+    </include>
+    <pose frame="">4.73156 -6.750542 0 0 0 0</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_DeskC_01_001">
+    <include>
+        <uri>model://aws_robomaker_warehouse_DeskC_01</uri>
+    </include>
+    <pose frame="">-0.061684 6.135864 0 0 0 0</pose>
+  </model>
+
+  <model name="aws_robomaker_warehouse_DeskC_01_002">
+    <include>
+        <uri>model://aws_robomaker_warehouse_DeskC_01</uri>
+    </include>
+    <pose frame="">-0.061684 3.039 0 0 0 0</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_DeskC_01_003">
+    <include>
+        <uri>model://aws_robomaker_warehouse_DeskC_01</uri>
+    </include>
+    <pose frame="">-0.061684 -6.6493 0 0 0 0</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_GroundB_01_001">
+    <include>
+        <uri>model://aws_robomaker_warehouse_GroundB_01</uri>
+    </include>
+    <pose frame="">0.0 0.0 -0.090092 0 0 0</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_Bucket_01_020">
+    <include>
+        <uri>model://aws_robomaker_warehouse_Bucket_01</uri>
+    </include>
+    <pose frame="">0.433449 9.631706 0 0 0 -1.563161</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_Bucket_01_021">
+    <include>
+        <uri>model://aws_robomaker_warehouse_Bucket_01</uri>
+    </include>
+    <pose frame="">-1.8321 -6.3752 0 0 0 -1.563161</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_Bucket_01_022">
+    <include>
+        <uri>model://aws_robomaker_warehouse_Bucket_01</uri>
+    </include>
+    <pose frame="">0.433449 8.59 0 0 0 -1.563161</pose>
+	</model>
+
+  <model name='aws_robomaker_warehouse_ClutteringA_01_016'>
+    <include>
+        <uri>model://aws_robomaker_warehouse_ClutteringA_01</uri>
+    </include>
+    <pose frame=''>5.708138 8.616844 -0.017477 0 0 0</pose>
+	</model>
+
+  <model name='aws_robomaker_warehouse_ClutteringA_01_017'>
+    <include>
+        <uri>model://aws_robomaker_warehouse_ClutteringA_01</uri>
+    </include>
+    <pose frame=''>3.408638 8.616844 -0.017477 0 0 0</pose>
+	</model>
+
+  <model name='aws_robomaker_warehouse_ClutteringA_01_018'>
+    <include>
+        <uri>model://aws_robomaker_warehouse_ClutteringA_01</uri>
+    </include>
+    <pose frame=''>-1.491287 5.222435 -0.017477 0 0 -1.583185</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_ClutteringC_01_027">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+    </include>
+    <pose frame="">3.324959 3.822449 -0.012064 0 0 1.563871</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_ClutteringC_01_028">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+    </include>
+    <pose frame="">5.54171 3.816475 -0.015663 0 0 -1.583191</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_ClutteringC_01_029">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+    </include>
+    <pose frame="">5.384239 6.137154 0 0 0 3.150000</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_ClutteringC_01_030">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+    </include>
+    <pose frame="">3.236 6.137154 0 0 0 3.150000</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_ClutteringC_01_031">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+    </include>
+    <pose frame="">-1.573677 2.301994 -0.015663 0 0 -3.133191</pose>
+	</model>
+
+  <model name="aws_robomaker_warehouse_ClutteringC_01_032">
+    <include>
+        <uri>model://aws_robomaker_warehouse_ClutteringC_01</uri>
+    </include>
+    <pose frame="">-1.2196 9.407 -0.015663 0 0 1.563871</pose>
+	</model>
+
+  <model name='aws_robomaker_warehouse_ClutteringD_01_005'>
+    <include>
+        <uri>model://aws_robomaker_warehouse_ClutteringD_01</uri>
+    </include>
+    <pose frame=''>-1.634682 -7.811813 -0.319559 0 0 0</pose>
+	</model>
+
+  <model name='aws_robomaker_warehouse_TrashCanC_01_002'>
+    <include>
+        <uri>model://aws_robomaker_warehouse_TrashCanC_01</uri>
+    </include>
+    <pose frame=''>-1.592441 7.715420 0 0 0 0</pose>
+	</model>
+
+  <model name='aws_robomaker_warehouse_PalletJackB_01_001'>
+    <include>
+        <uri>model://aws_robomaker_warehouse_PalletJackB_01</uri>
+    </include>
+    <pose frame=''>-0.276098 -9.481944 0.023266 0 0 0</pose>
+	</model>
+
+  <gui fullscreen="0">
+
+    <!-- 3D scene -->
+    <plugin filename="MinimalScene" name="3D View">
+      <gz-gui>
+        <title>3D View</title>
+        <property type="bool" key="showTitleBar">false</property>
+        <property type="string" key="state">docked</property>
+      </gz-gui>
+
+      <engine>ogre2</engine>
+      <scene>scene</scene>
+      <ambient_light>0.4 0.4 0.4</ambient_light>
+      <background_color>0.8 0.8 0.8</background_color>
+      <camera_pose>-3.5 -0.15 12.5 0 1.25 0</camera_pose>
+      <camera_clip>
+        <near>0.25</near>
+        <far>25000</far>
+      </camera_clip>
+    </plugin>
+
+    <!-- Plugins that add functionality to the scene -->
+    <plugin filename="EntityContextMenuPlugin" name="Entity context menu">
+      <gz-gui>
+        <property key="state" type="string">floating</property>
+        <property key="width" type="double">5</property>
+        <property key="height" type="double">5</property>
+        <property key="showTitleBar" type="bool">false</property>
+      </gz-gui>
+    </plugin>
+    <plugin filename="GzSceneManager" name="Scene Manager">
+      <gz-gui>
+        <property key="resizable" type="bool">false</property>
+        <property key="width" type="double">5</property>
+        <property key="height" type="double">5</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+      </gz-gui>
+    </plugin>
+    <plugin filename="InteractiveViewControl" name="Interactive view control">
+      <gz-gui>
+        <property key="resizable" type="bool">false</property>
+        <property key="width" type="double">5</property>
+        <property key="height" type="double">5</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+      </gz-gui>
+    </plugin>
+    <plugin filename="CameraTracking" name="Camera Tracking">
+      <gz-gui>
+        <property key="resizable" type="bool">false</property>
+        <property key="width" type="double">5</property>
+        <property key="height" type="double">5</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+      </gz-gui>
+    </plugin>
+    <plugin filename="MarkerManager" name="Marker manager">
+      <gz-gui>
+        <property key="resizable" type="bool">false</property>
+        <property key="width" type="double">5</property>
+        <property key="height" type="double">5</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+      </gz-gui>
+    </plugin>
+    <plugin filename="SelectEntities" name="Select Entities">
+      <gz-gui>
+        <anchors target="Select entities">
+          <line own="right" target="right"/>
+          <line own="top" target="top"/>
+        </anchors>
+        <property key="resizable" type="bool">false</property>
+        <property key="width" type="double">5</property>
+        <property key="height" type="double">5</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+      </gz-gui>
+    </plugin>
+    <plugin filename="VisualizationCapabilities" name="Visualization Capabilities">
+      <gz-gui>
+        <property key="resizable" type="bool">false</property>
+        <property key="width" type="double">5</property>
+        <property key="height" type="double">5</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+      </gz-gui>
+    </plugin>
+
+    <plugin filename="Spawn" name="Spawn Entities">
+      <gz-gui>
+        <anchors target="Select entities">
+          <line own="right" target="right"/>
+          <line own="top" target="top"/>
+        </anchors>
+        <property key="resizable" type="bool">false</property>
+        <property key="width" type="double">5</property>
+        <property key="height" type="double">5</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+      </gz-gui>
+    </plugin>
+
+    <!-- World control -->
+    <plugin filename="WorldControl" name="World control">
+      <gz-gui>
+        <title>World control</title>
+        <property type="bool" key="showTitleBar">false</property>
+        <property type="bool" key="resizable">false</property>
+        <property type="double" key="height">72</property>
+        <property type="double" key="z">1</property>
+
+        <property type="string" key="state">floating</property>
+        <anchors target="3D View">
+          <line own="left" target="left"/>
+          <line own="bottom" target="bottom"/>
+        </anchors>
+      </gz-gui>
+
+      <play_pause>true</play_pause>
+      <step>true</step>
+      <start_paused>true</start_paused>
+      <use_event>true</use_event>
+    </plugin>
+
+    <!-- World statistics -->
+    <plugin filename="WorldStats" name="World stats">
+      <gz-gui>
+        <title>World stats</title>
+        <property type="bool" key="showTitleBar">false</property>
+        <property type="bool" key="resizable">false</property>
+        <property type="double" key="height">110</property>
+        <property type="double" key="width">290</property>
+        <property type="double" key="z">1</property>
+
+        <property type="string" key="state">floating</property>
+        <anchors target="3D View">
+          <line own="right" target="right"/>
+          <line own="bottom" target="bottom"/>
+        </anchors>
+      </gz-gui>
+
+      <sim_time>true</sim_time>
+      <real_time>true</real_time>
+      <real_time_factor>true</real_time_factor>
+      <iterations>true</iterations>
+    </plugin>
+
+    <!-- Insert simple shapes -->
+    <plugin filename="Shapes" name="Shapes">
+      <gz-gui>
+        <property key="resizable" type="bool">false</property>
+        <property key="x" type="double">0</property>
+        <property key="y" type="double">0</property>
+        <property key="width" type="double">250</property>
+        <property key="height" type="double">50</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+        <property key="cardBackground" type="string">#666666</property>
+      </gz-gui>
+    </plugin>
+
+    <!-- Insert lights -->
+    <plugin filename="Lights" name="Lights">
+      <gz-gui>
+        <property key="resizable" type="bool">false</property>
+        <property key="x" type="double">250</property>
+        <property key="y" type="double">0</property>
+        <property key="width" type="double">150</property>
+        <property key="height" type="double">50</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+        <property key="cardBackground" type="string">#666666</property>
+      </gz-gui>
+    </plugin>
+
+    <!-- Translate / rotate -->
+    <plugin filename="TransformControl" name="Transform control">
+      <gz-gui>
+        <property key="resizable" type="bool">false</property>
+        <property key="x" type="double">0</property>
+        <property key="y" type="double">50</property>
+        <property key="width" type="double">250</property>
+        <property key="height" type="double">50</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+        <property key="cardBackground" type="string">#777777</property>
+      </gz-gui>
+    </plugin>
+
+    <!-- Screenshot -->
+    <plugin filename="Screenshot" name="Screenshot">
+      <gz-gui>
+        <property key="resizable" type="bool">false</property>
+        <property key="x" type="double">250</property>
+        <property key="y" type="double">50</property>
+        <property key="width" type="double">50</property>
+        <property key="height" type="double">50</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+        <property key="cardBackground" type="string">#777777</property>
+      </gz-gui>
+    </plugin>
+
+    <!-- Video recorder -->
+    <plugin filename="VideoRecorder" name="VideoRecorder">
+      <gz-gui>
+        <property key="resizable" type="bool">false</property>
+        <property key="x" type="double">300</property>
+        <property key="y" type="double">50</property>
+        <property key="width" type="double">50</property>
+        <property key="height" type="double">50</property>
+        <property key="state" type="string">floating</property>
+        <property key="showTitleBar" type="bool">false</property>
+        <property key="cardBackground" type="string">#777777</property>
+      </gz-gui>
+
+      <record_video>
+        <use_sim_time>true</use_sim_time>
+        <lockstep>false</lockstep>
+        <bitrate>4000000</bitrate>
+      </record_video>
+    </plugin>
+
+    <!-- Inspector -->
+    <plugin filename="ComponentInspector" name="Component inspector">
+      <gz-gui>
+        <property type="string" key="state">docked_collapsed</property>
+      </gz-gui>
+    </plugin>
+
+    <!-- Entity tree -->
+    <plugin filename="EntityTree" name="Entity tree">
+      <gz-gui>
+        <property type="string" key="state">docked_collapsed</property>
+      </gz-gui>
+    </plugin>
+
+    <!-- View angle -->
+    <plugin filename="ViewAngle" name="View angle">
+      <gz-gui>
+        <property type="string" key="state">docked_collapsed</property>
+      </gz-gui>
+    </plugin>
+
+  </gui>
+
+
+  </world>
+</sdf>
