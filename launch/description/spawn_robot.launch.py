@@ -22,7 +22,7 @@ def generate_launch_description():
     use_sim_time = True
     gui = False
 
-    world_name = 'mapping.world'
+    world_name = 'mapping.sdf'
     camera_enabled = True
     two_d_lidar_enabled = True
     rviz_enabled = False

@@ -18,7 +18,7 @@ def generate_launch_description():
 
     use_sim_time = True
 
-    world_name = 'empty.world'
+    world_name = 'empty.sdf'
     camera_enabled = False
     two_d_lidar_enabled = False
     rviz_enabled = False
