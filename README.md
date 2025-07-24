@@ -63,7 +63,7 @@ Tutorial
 * Open a new terminal and run the teleoperation node:
 
    ```bash
-   ros2 run key_teleop_ros key_teleop_ros
+   ros2 run key_teleop_ros key_drive
    ```
 
    Use the arrow keys to control the robot's movement.
@@ -74,6 +74,40 @@ Tutorial
 
    https://github.com/user-attachments/assets/cd9df2df-2087-4dc8-8ce1-d5b526d30321
 
+### 3. Mapping
+
+* Launch the robot in Gazebo:
+
+   ```bash
+   ros2 launch atreus gazebo.launch.py
+   ```
+
+* Open another terminal and run the mapping node:
+
+   ```bash
+   ros2 launch atreus slam_toolbox.launch.py
+   ```
+
+   This will start the mapping process using **SLAM Toolbox**.
+
+* Open a new terminal and run the teleoperation node:
+
+   ```bash
+   ros2 run key_teleop_ros key_drive
+   ```
+
+   This will allow you to map the environment by driving the robot around.
+
+   https://github.com/user-attachments/assets/b92657ef-2855-4d6b-8c25-e220f16a3816
+
+
+* In order to save the map, open a new terminal and run the following command:
+
+   ```bash
+   ros2 run nav2_map_server map_saver_cli -f my_map
+   ```
+
+   This will save the map to the current directory.
 
 
 ###### 💾 EOF
