@@ -451,7 +451,7 @@
       </record_video>
     </plugin>
 
-    <!-- Inspector -->
+    <!-- Component Inspector -->
     <plugin filename="ComponentInspector" name="Component inspector">
       <gz-gui>
         <property type="string" key="state">docked_collapsed</property>
@@ -471,6 +471,9 @@
         <property type="string" key="state">docked_collapsed</property>
       </gz-gui>
     </plugin>
+
+    <!-- Teleop -->
+    <plugin filename="Teleop" name="Teleoperation"/>
 
   </gui>
 
