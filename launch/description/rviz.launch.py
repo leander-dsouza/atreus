@@ -18,7 +18,7 @@ def generate_launch_description():
     """
     # .................. Configurable Arguments .....................
 
-    gui = False
+    gui = True
 
     camera_enabled = True
     two_d_lidar_enabled = True

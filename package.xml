@@ -23,6 +23,7 @@
 	<exec_depend>nav2_controller</exec_depend>
 	<exec_depend>nav2_planner</exec_depend>
   <exec_depend>joint_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher_gui</exec_depend>
 
   <!-- Custom dependencies -->
   <exec_depend>key_teleop_ros</exec_depend>
