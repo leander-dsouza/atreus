@@ -1,6 +1,7 @@
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/leander-dsouza/atreus/blob/master/LICENSE) <img src="https://img.shields.io/badge/foxy-passing-green&style=plastic">
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Lint](https://github.com/leander-dsouza/atreus/actions/workflows/lint.yml/badge.svg)
 
-# Atreus
+# Atreus for ROS 2 - Jazzy
 
 ![Python 3](https://img.shields.io/badge/-Python-black?style=plastic&logo=Python)
 ![CMake](https://img.shields.io/badge/-CMake-064F8C?style=plastic&logo=CMake)
@@ -11,30 +12,68 @@ This package contains a mutlipurpose four-wheeled skid-steer drive robot equippe
 Installation
 ------------
 
-* In the docker only, disable online loading of gazebo models:
+### 1. Dev Container (Recommended)
 
-	  ./pause_gazebo_models.sh
+* Install the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension for Visual Studio Code.
+
+* Open the repository in Visual Studio Code and select `Reopen in Container` from the Command Palette (`Ctrl+Shift+P`).
+This will build the development container with all the necessary dependencies.
+
+### 2. Native Installation
+
+* Clone the repository for responsible for driving the robot using arrow keys:
+
+   ```bash
+   cd $ROS_WS/src/
+   git clone git@github.com:leander-dsouza/key_teleop_ros.git
+   ```
 
 * Install all the required ROS related dependencies:
 
-	  rosdep install --from-paths src --ignore-src -r -y
+   ```bash
+   rosdep install --from-paths $ROS_WS/src --ignore-src -r -y
+   ```
 
-* To install all python related dependencies:
+* Build the packages:
 
-	  pip install -r requirements.txt
+   ```bash
+   colcon build --symlink-install --packages-select atreus key_teleop_ros
+   ```
 
-* For basic bot simulation:
+Tutorial
+--------
 
-	  ros2 launch atreus main.launch.py
+### 1. RViz Joint Visualization
 
-### Optional
+* Launch the robot in RViz:
 
-* To add an additional python dependency to the list, modify `requirements.in` and add a trailing library to the file. After which you need to install the following dependencies in order to use `pip-compile`:
+   ```bash
+   ros2 launch atreus rviz.launch.py
+   ```
+   https://github.com/user-attachments/assets/d9053cb4-9933-4115-bb04-ae64e0fe399b
 
-	  pip install pip-tools launchpadlib
+### 2. Teleoperation in Gazebo
 
-* Finally use `pip-compile` to generate a `requirements.txt` file from `requirements.in`:
+* Launch the robot in Gazebo:
 
-	  pip-compile requirements.in
+   ```bash
+   ros2 launch atreus gazebo.launch.py
+   ```
+
+* Open a new terminal and run the teleoperation node:
+
+   ```bash
+   ros2 run key_teleop_ros key_teleop_ros
+   ```
+
+   Use the arrow keys to control the robot's movement.
+
+   <p align="center">
+      <img width="510" height="107" alt="driving_script_interface" src="https://github.com/user-attachments/assets/561d433e-1ad9-4e9e-9f08-7ec0fb330eb0" />
+   </p>
+
+   https://github.com/user-attachments/assets/cd9df2df-2087-4dc8-8ce1-d5b526d30321
+
+
 
 ###### 💾 EOF
