@@ -22,9 +22,13 @@ def generate_launch_description():
     rviz_config_path = os.path.join(
         pkg_dir, 'config', 'rviz', 'urdf.rviz')
     world_path = os.path.join(pkg_dir, 'worlds', 'mapping.sdf')
+    bridge_params_path = os.path.join(
+        pkg_dir, 'config', 'ros_gz_bridge.yaml'
+    )
 
 
      # Create the launch configuration variables
+    use_sim_time = LaunchConfiguration('use_sim_time')
     camera_enabled = LaunchConfiguration('camera_enabled')
     two_d_lidar_enabled = LaunchConfiguration('two_d_lidar_enabled')
     rviz_enabled = LaunchConfiguration('rviz_enabled')
@@ -76,29 +80,14 @@ def generate_launch_description():
         ]
     )
     gz_ros2_bridge_node = Node(
-        package="ros_gz_bridge",
-        executable="parameter_bridge",
-        arguments=[
-            "/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
-            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
-            "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
-            "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
-            "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
-            "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
-            "/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
-            "/imu@sensor_msgs/msg/Imu[gz.msgs.IMU",
-            "/world/default/model/atreus/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model"
-        ],
-        remappings=[
-            ('/cmd_vel', '/cmd_vel'),
-            ('/odom', '/odom'),
-            ('/tf', '/tf'),
-            ('/scan', '/scan'),
-            ('/camera/camera_info', '/camera/camera_info'),
-            ('/camera/points', '/camera/points'),
-            ('/imu', '/imu'),
-            ('/world/default/model/atreus/joint_state', '/joint_states')
-        ]
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='bridge_ros_gz',
+        parameters=[{
+            'config_file': bridge_params_path,
+            'use_sim_time': use_sim_time
+        }],
+        output='screen',
     )
 
     robot_state_publisher_node = Node(
