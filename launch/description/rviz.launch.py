@@ -16,79 +16,89 @@ def generate_launch_description():
     """
     Launch Function
     """
-    # .................. Configurable Arguments .....................
-
-    gui = True
-
-    camera_enabled = True
-    two_d_lidar_enabled = True
-    gazebo_enabled = False
-    rviz_config = 'urdf.rviz'
-
-    # ...............................................................
-
-
     pkg_dir = get_package_share_directory('atreus')
 
-    return LaunchDescription([
+    rviz_config_path = os.path.join(
+        pkg_dir, 'config', 'rviz', 'urdf.rviz')
 
-        # Launch Arguments
-        DeclareLaunchArgument('gui', \
-            default_value=str(gui), \
-                description='Flag to enable joint_state_publisher_gui'),
+     # Create the launch configuration variables
+    gazebo_enabled = LaunchConfiguration('gazebo_enabled')
+    camera_enabled = LaunchConfiguration('camera_enabled')
+    two_d_lidar_enabled = LaunchConfiguration('two_d_lidar_enabled')
+    rviz_config = LaunchConfiguration('rviz_config')
+    gui = LaunchConfiguration('gui')
 
-        DeclareLaunchArgument("camera_enabled", \
-            default_value=str(camera_enabled), \
-                description="Camera Xacro Argument"),
 
-        DeclareLaunchArgument("two_d_lidar_enabled", \
-            default_value=str(two_d_lidar_enabled), \
-                description="2D LiDAR Xacro Argument"),
+    # Declare the launch arguments
+    declare_use_sim_time_arg = DeclareLaunchArgument(
+        'use_sim_time', default_value='True',
+        description='Flag to enable use_sim_time'
+    )
+    declare_gazebo_enabled_arg = DeclareLaunchArgument(
+        'gazebo_enabled', default_value='False',
+        description='Flag to indicate if Gazebo is enabled'
+    )
+    declare_camera_enabled_arg = DeclareLaunchArgument(
+        'camera_enabled', default_value='False',
+        description='Flag to enable camera'
+    )
+    declare_two_d_lidar_enabled_arg = DeclareLaunchArgument(
+        'two_d_lidar_enabled', default_value='False',
+        description='Flag to enable 2D LiDAR'
+    )
+    declare_rviz_config_arg = DeclareLaunchArgument(
+        'rviz_config', default_value=rviz_config_path,
+        description='Full path to the RViz config file to use'
+    )
+    declare_gui_arg = DeclareLaunchArgument(
+        'gui', default_value='True',
+        description='Flag to enable joint_state_publisher_gui'
+    )
 
-        DeclareLaunchArgument("gazebo_enabled", \
-            default_value=str(gazebo_enabled), \
-                description="Gazebo has started"),
+    # Include the Nodes
+    joint_state_publisher_gui_node = Node(
+        package='joint_state_publisher_gui',
+        executable='joint_state_publisher_gui',
+        name='joint_state_publisher_gui',
+        condition=IfCondition(PythonExpression(
+            ["'", gui, "' == 'True' and '", gazebo_enabled, "' == 'False'"]))
+    )
+    joint_state_publisher_node = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        name='joint_state_publisher',
+        condition=IfCondition(PythonExpression(
+            ["'", gui, "' == 'False' and '", gazebo_enabled, "' == 'False'"]))
+    )
+    robot_state_publisher_node = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        parameters=[{'robot_description': Command(
+            ['xacro ', os.path.join(pkg_dir, 'urdf', 'atreus.xacro'),
+            ' camera_enabled:=', camera_enabled,
+            ' two_d_lidar_enabled:=', two_d_lidar_enabled
+            ])}],
+        condition=UnlessCondition(gazebo_enabled)
+    )
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        output='screen',
+        arguments=['-d', rviz_config],
+    )
 
-        DeclareLaunchArgument("rviz_config", \
-            default_value=rviz_config, \
-                description="RViz Config"),
+    ld = LaunchDescription()
 
-        # Nodes
-        Node(
-            package='joint_state_publisher_gui',
-            executable='joint_state_publisher_gui',
-            name='joint_state_publisher_gui',
-            condition=IfCondition(PythonExpression( \
-                ["'", LaunchConfiguration('gui'), "' == 'True' and '", \
-                    LaunchConfiguration('gazebo_enabled'), "' == 'False'"]))
-        ),
+    ld.add_action(declare_use_sim_time_arg)
+    ld.add_action(declare_gazebo_enabled_arg)
+    ld.add_action(declare_camera_enabled_arg)
+    ld.add_action(declare_two_d_lidar_enabled_arg)
+    ld.add_action(declare_rviz_config_arg)
+    ld.add_action(declare_gui_arg)
 
-        Node(
-            package='joint_state_publisher',
-            executable='joint_state_publisher',
-            name='joint_state_publisher',
-            condition=IfCondition(PythonExpression( \
-                ["'", LaunchConfiguration('gui'), "' == 'False' and '", \
-                    LaunchConfiguration('gazebo_enabled'), "' == 'False'"]))
-        ),
+    ld.add_action(joint_state_publisher_gui_node)
+    ld.add_action(joint_state_publisher_node)
+    ld.add_action(robot_state_publisher_node)
+    ld.add_action(rviz_node)
 
-        Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            parameters=[{'robot_description': Command( \
-                ['xacro ', os.path.join(pkg_dir, 'urdf/atreus.xacro'),
-                ' camera_enabled:=',      LaunchConfiguration('camera_enabled'),
-                ' two_d_lidar_enabled:=', LaunchConfiguration('two_d_lidar_enabled'),
-                ])}],
-            condition=UnlessCondition(LaunchConfiguration('gazebo_enabled'))
-        ),
-
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            output='screen',
-            arguments=['-d', [os.path.join(pkg_dir, 'config', 'rviz/'), \
-                LaunchConfiguration("rviz_config")]],
-        ),
-
-    ])
+    return ld
