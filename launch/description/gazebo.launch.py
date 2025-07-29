@@ -2,12 +2,22 @@
 """
 Spawn Robot in Gazebo
 """
+
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, Command, PythonExpression, PathJoinSubstitution
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, AppendEnvironmentVariable
+from launch.substitutions import (
+    LaunchConfiguration,
+    Command,
+    PythonExpression,
+    PathJoinSubstitution,
+)
+from launch.actions import (
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+    AppendEnvironmentVariable,
+)
 from launch.conditions import IfCondition
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -17,54 +27,49 @@ def generate_launch_description():
     """
     Launch Function
     """
-    pkg_dir = get_package_share_directory('atreus')
+    pkg_dir = get_package_share_directory("atreus")
 
-    rviz_config_path = os.path.join(
-        pkg_dir, 'config', 'rviz', 'urdf.rviz')
-    world_path = os.path.join(pkg_dir, 'worlds', 'mapping.sdf')
-    bridge_params_path = os.path.join(
-        pkg_dir, 'config', 'ros_gz_bridge.yaml'
-    )
+    rviz_config_path = os.path.join(pkg_dir, "config", "rviz", "urdf.rviz")
+    world_path = os.path.join(pkg_dir, "worlds", "mapping.sdf")
+    bridge_params_path = os.path.join(pkg_dir, "config", "ros_gz_bridge.yaml")
 
-
-     # Create the launch configuration variables
-    use_sim_time = LaunchConfiguration('use_sim_time')
-    camera_enabled = LaunchConfiguration('camera_enabled')
-    two_d_lidar_enabled = LaunchConfiguration('two_d_lidar_enabled')
-    rviz_enabled = LaunchConfiguration('rviz_enabled')
-    rviz_config = LaunchConfiguration('rviz_config')
+    # Create the launch configuration variables
+    use_sim_time = LaunchConfiguration("use_sim_time")
+    camera_enabled = LaunchConfiguration("camera_enabled")
+    two_d_lidar_enabled = LaunchConfiguration("two_d_lidar_enabled")
+    rviz_enabled = LaunchConfiguration("rviz_enabled")
+    rviz_config = LaunchConfiguration("rviz_config")
 
     # Declare the append environment variables
     append_env_var_gz_sim_resource_path = AppendEnvironmentVariable(
-        name='GZ_SIM_RESOURCE_PATH',
-        value=os.path.join(pkg_dir, "worlds") + ':' +
-              os.path.join(pkg_dir, "models", "warehouse_models")
+        name="GZ_SIM_RESOURCE_PATH",
+        value=os.path.join(pkg_dir, "worlds")
+        + ":"
+        + os.path.join(pkg_dir, "models", "warehouse_models"),
     )
 
     # Declare the launch arguments
     declare_use_sim_time_arg = DeclareLaunchArgument(
-        'use_sim_time', default_value='True',
-        description='Flag to enable use_sim_time'
+        "use_sim_time", default_value="True", description="Flag to enable use_sim_time"
     )
     declare_world_name_arg = DeclareLaunchArgument(
-        'world_name', default_value=world_path,
-        description='Choice of Gazebo World'
+        "world_name", default_value=world_path, description="Choice of Gazebo World"
     )
     declare_camera_enabled_arg = DeclareLaunchArgument(
-        'camera_enabled', default_value='False',
-        description='Flag to enable camera'
+        "camera_enabled", default_value="False", description="Flag to enable camera"
     )
     declare_two_d_lidar_enabled_arg = DeclareLaunchArgument(
-        'two_d_lidar_enabled', default_value='False',
-        description='Flag to enable 2D LiDAR'
+        "two_d_lidar_enabled",
+        default_value="False",
+        description="Flag to enable 2D LiDAR",
     )
     declare_rviz_enabled_arg = DeclareLaunchArgument(
-        'rviz_enabled', default_value='False',
-        description='Flag to enable RViz'
+        "rviz_enabled", default_value="False", description="Flag to enable RViz"
     )
     declare_rviz_config_arg = DeclareLaunchArgument(
-        'rviz_config', default_value=rviz_config_path,
-        description='Full path to the RViz config file to use'
+        "rviz_config",
+        default_value=rviz_config_path,
+        description="Full path to the RViz config file to use",
     )
 
     # Include the Nodes
@@ -72,54 +77,67 @@ def generate_launch_description():
         package="ros_gz_sim",
         executable="create",
         arguments=[
-            "-topic", "/robot_description",
-            "-name", "atreus",
-            "-x", "0",
-            "-y", "0",
-            "-z", "0.5",
-        ]
+            "-topic",
+            "/robot_description",
+            "-name",
+            "atreus",
+            "-x",
+            "0",
+            "-y",
+            "0",
+            "-z",
+            "0.5",
+        ],
     )
     gz_ros2_bridge_node = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        name='bridge_ros_gz',
-        parameters=[{
-            'config_file': bridge_params_path,
-            'use_sim_time': use_sim_time
-        }],
-        output='screen',
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        name="bridge_ros_gz",
+        parameters=[{"config_file": bridge_params_path, "use_sim_time": use_sim_time}],
+        output="screen",
     )
 
     robot_state_publisher_node = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        parameters=[{'robot_description': Command(
-            ['xacro ', os.path.join(pkg_dir, 'urdf', 'atreus.xacro'),
-            ' camera_enabled:=', camera_enabled,
-            ' two_d_lidar_enabled:=', two_d_lidar_enabled
-            ])}]
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        parameters=[
+            {
+                "robot_description": Command(
+                    [
+                        "xacro ",
+                        os.path.join(pkg_dir, "urdf", "atreus.xacro"),
+                        " camera_enabled:=",
+                        camera_enabled,
+                        " two_d_lidar_enabled:=",
+                        two_d_lidar_enabled,
+                    ]
+                )
+            }
+        ],
     )
 
     gz_sim_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
-                [FindPackageShare('ros_gz_sim'), 'launch', 'gz_sim.launch.py'])),
+                [FindPackageShare("ros_gz_sim"), "launch", "gz_sim.launch.py"]
+            )
+        ),
         launch_arguments={
-            "gz_args" : PythonExpression(
-                ["'", world_path, " -r'"])
-        }.items()
+            "gz_args": PythonExpression(["'", world_path, " -r'"])
+        }.items(),
     )
 
     rviz_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(pkg_dir, "launch", "description", "rviz.launch.py")),
+            os.path.join(pkg_dir, "launch", "description", "rviz.launch.py")
+        ),
         launch_arguments={
-            'gazebo_enabled': 'True',
-            'camera_enabled': camera_enabled,
-            'two_d_lidar_enabled': two_d_lidar_enabled,
-            'rviz_config': rviz_config,
-            }.items(),
-        condition=IfCondition(rviz_enabled)
+            "gazebo_enabled": "True",
+            "camera_enabled": camera_enabled,
+            "two_d_lidar_enabled": two_d_lidar_enabled,
+            "rviz_config": rviz_config,
+        }.items(),
+        condition=IfCondition(rviz_enabled),
     )
 
     ld = LaunchDescription()
