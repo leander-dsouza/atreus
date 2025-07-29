@@ -76,13 +76,7 @@ Tutorial
 
 ### 3. Mapping
 
-* Launch the robot in Gazebo:
-
-   ```bash
-   ros2 launch atreus gazebo.launch.py
-   ```
-
-* Open another terminal and run the mapping node:
+* Launch the robot in Gazebo with the SLAM Toolbox:
 
    ```bash
    ros2 launch atreus slam_toolbox.launch.py
@@ -108,6 +102,22 @@ Tutorial
    ```
 
    This will save the map to the current directory.
+
+### 4. Navigation
+
+* Launch the robot in Gazebo with the Navigation Stack:
+
+   ```bash
+   ros2 launch atreus nav2.launch.py
+   ```
+
+* Set the initial pose of the robot in RViz by clicking on the `2D Pose Estimate` button:
+
+   https://github.com/user-attachments/assets/069b1ef0-fe6b-44de-9619-21d33b4e03c2
+
+* Use the `2D Nav Goal` button in RViz to set a goal for the robot to navigate to:
+
+   https://github.com/user-attachments/assets/2a6be428-39a5-4ea4-aa1c-65f8049b58eb
 
 
 ###### 💾 EOF
