@@ -2,4 +2,7 @@
 select = [
     "F",  # Pyflakes
     "I",  # isort
+    "E",  # Error in Pycodestyle
+    "W",  # Warning in Pycodestyle
+    "D",  # Pydocstyle
 ]

@@ -1,7 +1,5 @@
 #! /usr/bin/env python3
-"""
-Launch SLAM Toolbox for mapping with RViz support
-"""
+"""Script to launch Gazebo, RViz, and SLAM Toolbox for the Atreus robot."""
 
 import os
 
@@ -16,8 +14,7 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 
 def generate_launch_description():
-    """Launch Function"""
-
+    """Generate the launch description for Atreus."""
     pkg_dir = get_package_share_directory("atreus")
 
     rviz_config_path = os.path.join(pkg_dir, "config", "rviz", "mapping.rviz")

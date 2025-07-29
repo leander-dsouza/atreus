@@ -1,7 +1,5 @@
-#! /usr/bin/env python
-"""
-Spawn Robot in RViz
-"""
+#! /usr/bin/env python3
+"""Script to launch RViz for the Atreus robot."""
 
 import os
 
@@ -15,9 +13,7 @@ from launch.substitutions import Command, LaunchConfiguration, PythonExpression
 
 
 def generate_launch_description():
-    """
-    Launch Function
-    """
+    """Generate the launch description for Atreus."""
     pkg_dir = get_package_share_directory("atreus")
 
     rviz_config_path = os.path.join(pkg_dir, "config", "rviz", "urdf.rviz")

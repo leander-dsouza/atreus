@@ -1,3 +1,6 @@
+#! /usr/bin/env python3
+"""Script to launch Gazebo, RViz, and Nav2 for the Atreus robot."""
+
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -10,6 +13,7 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 
 def generate_launch_description():
+    """Generate the launch description for Atreus."""
     pkg_dir = get_package_share_directory("atreus")
 
     warehouse_map = os.path.join(
