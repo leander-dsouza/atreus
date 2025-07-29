@@ -23,8 +23,8 @@ def generate_launch_description():
     gui = False
 
     world_name = 'mapping.sdf'
-    camera_enabled = True
-    two_d_lidar_enabled = True
+    camera_enabled = False
+    two_d_lidar_enabled = False
     rviz_enabled = False
     rviz_config = 'urdf.rviz'
 
