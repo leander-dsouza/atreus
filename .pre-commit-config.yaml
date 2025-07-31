@@ -11,9 +11,48 @@ repos:
     hooks:
     -   id: codespell
 
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.5
+  - repo: local
     hooks:
-      - id: ruff-check
-        args: [ --fix ]
-      - id: ruff-format
+
+    -   id: ament_copyright
+        name: ament_copyright
+        description: Check copyright headers in source files.
+        language: system
+        files: \.(py|cpp|hpp|h|c)$
+        entry: ament_copyright
+
+    -   id: ament_flake8
+        name: ament_flake8
+        description: Check Python code style using flake8.
+        language: system
+        types: [python]
+        entry: ament_flake8
+
+    -   id: ament_lint_cmake
+        name: ament_lint_cmake
+        description: Check CMake code style using cmakelint.
+        language: system
+        types: [cmake]
+        entry: ament_lint_cmake
+
+    -   id: ament_mypy
+        name: ament_mypy
+        description: Check Python code style using mypy.
+        language: system
+        types: [python]
+        args: ["--config", "mypy.ini"]
+        entry: ament_mypy
+
+    -   id: ament_pep257
+        name: ament_pep257
+        description: Check Python code style using pep257.
+        language: system
+        types: [python]
+        entry: ament_pep257
+
+    -   id: ament_xmllint
+        name: ament_xmllint
+        description: Check XML markup using xmllint.
+        language: system
+        types: [xml]
+        entry: ament_xmllint

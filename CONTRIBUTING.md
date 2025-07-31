@@ -1,5 +1,11 @@
 # How to contribute to atreus
 
+## Copyright & License
+
+Any contribution that you make to this repository will
+be under the MIT license, as dictated by that
+[license](https://opensource.org/licenses/MIT).
+
 ### **Did you find a bug?**
 
 * **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/leander-dsouza/atreus/issues).
